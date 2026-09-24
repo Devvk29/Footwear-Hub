@@ -533,8 +533,11 @@ export const AuthProvider = ({ children }) => {
       localStorage.removeItem('kf_user_size_profile');
       localStorage.removeItem('kf_customer_pincode');
       sessionStorage.clear();
+      // NOTE: kf_cart_* keys are cleared on logout for cart isolation.
+      // kf_wishlist_* keys are intentionally NOT cleared — they are a local warm-cache
+      // backed by Firestore wishlists/{phone}. Keeping them speeds up the next login load.
       Object.keys(localStorage).forEach(key => {
-        if (key.startsWith('kf_cart_') || key.startsWith('kf_wishlist_')) {
+        if (key.startsWith('kf_cart_')) {
           localStorage.removeItem(key);
         }
       });

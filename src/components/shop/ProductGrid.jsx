@@ -1,19 +1,13 @@
-import React, { useState, useRef } from 'react';
+import React from 'react';
 import { ProductCard } from './ProductCard';
 import {
-  Sparkles,
   SlidersHorizontal,
   Ruler,
   MessageCircle,
   Leaf,
   ShieldCheck,
   Heart,
-  ArrowRight,
-  ChevronLeft,
-  ChevronRight,
-  LayoutGrid,
-  Columns2,
-  Square
+  ArrowRight
 } from 'lucide-react';
 import { STORE_INFO } from '../../data/storeInfo';
 
@@ -27,44 +21,9 @@ export const ProductGrid = ({
   onOpenSizeGuide,
   onOpenStory
 }) => {
-  const [viewMode, setViewMode] = useState('grid2');
-  const sliderRef = useRef(null);
-
-  // Mouse Dragging State for Slidebar
-  const [isDragging, setIsDragging] = useState(false);
-  const [startX, setStartX] = useState(0);
-  const [scrollLeft, setScrollLeft] = useState(0);
-
-  const onMouseDown = (e) => {
-    setIsDragging(true);
-    setStartX(e.pageX - (sliderRef.current?.offsetLeft || 0));
-    setScrollLeft(sliderRef.current?.scrollLeft || 0);
-  };
-  const onMouseLeave = () => setIsDragging(false);
-  const onMouseUp = () => setIsDragging(false);
-  const onMouseMove = (e) => {
-    if (!isDragging || !sliderRef.current) return;
-    e.preventDefault();
-    const x = e.pageX - sliderRef.current.offsetLeft;
-    const walk = (x - startX) * 1.5;
-    sliderRef.current.scrollLeft = scrollLeft - walk;
-  };
-
   const handleWhatsApp = () => {
     const text = encodeURIComponent("Namaste Shri Manak Kothari ji! I would like to get custom shoe fitting advice.");
     window.open(`https://wa.me/${STORE_INFO.contact.whatsapp}?text=${text}`, '_blank');
-  };
-
-  const slideLeft = () => {
-    if (sliderRef.current) {
-      sliderRef.current.scrollBy({ left: -320, behavior: 'smooth' });
-    }
-  };
-
-  const slideRight = () => {
-    if (sliderRef.current) {
-      sliderRef.current.scrollBy({ left: 320, behavior: 'smooth' });
-    }
   };
 
   return (
@@ -85,54 +44,6 @@ export const ProductGrid = ({
         </div>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
-          
-          {/* Layout / Slidebar Switcher for Mobile & Desktop */}
-          <div className="layout-mode-selector" style={{ display: 'flex', alignItems: 'center', background: 'var(--bg-secondary)', border: '1px solid var(--border-subtle)', borderRadius: 'var(--radius-sm)', padding: '2px' }}>
-            <button
-              type="button"
-              onClick={() => setViewMode('grid2')}
-              style={{
-                background: viewMode === 'grid2' ? 'var(--accent-charcoal)' : 'transparent',
-                color: viewMode === 'grid2' ? '#FFF' : 'var(--text-muted)',
-                border: 'none',
-                borderRadius: '4px',
-                padding: '4px 8px',
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '3px',
-                fontSize: '0.72rem',
-                fontWeight: 600
-              }}
-              title="2-Card Grid"
-            >
-              <Columns2 size={13} />
-              <span>2 Cards</span>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => setViewMode('slider')}
-              style={{
-                background: viewMode === 'slider' ? 'var(--accent-charcoal)' : 'transparent',
-                color: viewMode === 'slider' ? '#FFF' : 'var(--text-muted)',
-                border: 'none',
-                borderRadius: '4px',
-                padding: '4px 8px',
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '3px',
-                fontSize: '0.72rem',
-                fontWeight: 600
-              }}
-              title="2-Card Slidebar / Carousel"
-            >
-              <Sparkles size={13} />
-              <span>Slidebar</span>
-            </button>
-          </div>
-
           {/* Sort Dropdown */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
             <select
@@ -161,99 +72,19 @@ export const ProductGrid = ({
         </div>
       </div>
 
-      {/* Grid of Shoes or 2-Card Horizontal Slidebar */}
+      {/* Grid of Shoes - 100% Clean Footwear Grid */}
       {products.length > 0 ? (
-        viewMode === 'slider' ? (
-          /* Horizontal 2-Card Slidebar with Left/Right Touch Controls */
-          <div style={{ position: 'relative' }}>
-            {/* Slider Navigation Arrows */}
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.65rem' }}>
-              <span style={{ fontSize: '0.78rem', fontWeight: 700, color: 'var(--accent-sage)', display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
-                <span>👆 Drag / swipe left-right or use arrows (2 Cards view)</span>
-              </span>
-              <div style={{ display: 'flex', gap: '0.5rem' }}>
-                <button
-                  type="button"
-                  onClick={slideLeft}
-                  style={{
-                    background: '#FFFFFF',
-                    border: '1.5px solid #D4A373',
-                    borderRadius: '50%',
-                    width: '34px',
-                    height: '34px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    cursor: 'pointer',
-                    color: '#111827',
-                    boxShadow: '0 2px 5px rgba(0,0,0,0.1)'
-                  }}
-                  title="Slide Left"
-                >
-                  <ChevronLeft size={18} />
-                </button>
-                <button
-                  type="button"
-                  onClick={slideRight}
-                  style={{
-                    background: '#FFFFFF',
-                    border: '1.5px solid #D4A373',
-                    borderRadius: '50%',
-                    width: '34px',
-                    height: '34px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    cursor: 'pointer',
-                    color: '#111827',
-                    boxShadow: '0 2px 5px rgba(0,0,0,0.1)'
-                  }}
-                  title="Slide Right"
-                >
-                  <ChevronRight size={18} />
-                </button>
-              </div>
-            </div>
-
-            {/* Slidebar Shelf Container */}
-            <div
-              ref={sliderRef}
-              className="shoes-slidebar-shelf"
-              onMouseDown={onMouseDown}
-              onMouseLeave={onMouseLeave}
-              onMouseUp={onMouseUp}
-              onMouseMove={onMouseMove}
-              style={{
-                cursor: isDragging ? 'grabbing' : 'grab',
-                userSelect: 'none'
-              }}
-            >
-              {products.map((p) => (
-                <div key={p.id} className="shoes-slidebar-item">
-                  <ProductCard
-                    product={p}
-                    onQuickView={onQuickView}
-                    onOpenCheckout={onOpenCheckout}
-                    viewMode="slider"
-                  />
-                </div>
-              ))}
-            </div>
-          </div>
-        ) : (
-          /* Standard 2-Card Grid View - 100% Clean Footwear Grid */
-          <div className="products-grid-container">
-            {products.map((p) => (
-              <ProductCard
-                key={p.id}
-                product={p}
-                onQuickView={onQuickView}
-                onOpenCheckout={onOpenCheckout}
-                viewMode="grid"
-              />
-            ))}
-          </div>
-        )
+        <div className="products-grid-container">
+          {products.map((p) => (
+            <ProductCard
+              key={p.id}
+              product={p}
+              onQuickView={onQuickView}
+              onOpenCheckout={onOpenCheckout}
+              viewMode="grid"
+            />
+          ))}
+        </div>
       ) : (
         /* Empty State */
         <div style={{

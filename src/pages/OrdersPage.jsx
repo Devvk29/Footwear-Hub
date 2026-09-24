@@ -91,15 +91,15 @@ export const OrdersPage = () => {
               title="Go to previous page"
             >
               <ArrowLeft size={16} />
-              <span>← Back</span>
+              <span>Back</span>
             </button>
 
             <Link
               to="/"
-              className="btn btn-ghost"
+              className="btn btn-secondary"
               style={{
                 minHeight: '44px',
-                padding: '0.5rem 0.9rem',
+                padding: '0.5rem 1rem',
                 display: 'inline-flex',
                 alignItems: 'center',
                 gap: '0.35rem',
@@ -109,7 +109,7 @@ export const OrdersPage = () => {
                 borderRadius: 'var(--radius-md)'
               }}
             >
-              <span>Back to Dashboard</span>
+              <span>Dashboard</span>
             </Link>
 
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.8125rem', color: 'var(--text-muted)', marginLeft: '0.25rem' }}>
@@ -431,22 +431,25 @@ export const OrdersPage = () => {
                     </div>
 
                     <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
-                      {/* WhatsApp Dispatch Button */}
-                      <button
-                        type="button"
-                        onClick={() => {
-                          const itemsList = (ord.items || []).map((it) => `• ${it.name} (IND ${it.size}) x${it.quantity}`).join('\n');
-                          const text = encodeURIComponent(
-                            `Namaste Shri Manak Kothari ji!\n\nI have an order inquiry for Kothari Footwear:\n*Invoice ID:* #${ord.id}\n*Customer:* ${ord.customer?.name || 'Customer'} (${ord.customer?.phone || ''})\n*Delivery PIN:* ${ord.shippingAddress?.pincode || '383430'}\n*Items:*\n${itemsList}\n*Total Bill:* ₹${ord.pricing?.finalTotal || ord.pricing?.subtotal || 0}\n\nPlease share the live dispatch & courier tracking update.`
-                          );
-                          window.open(`https://wa.me/919427644222?text=${text}`, '_blank');
-                        }}
-                        className="btn btn-secondary"
-                        style={{ padding: '0.45rem 0.8rem', fontSize: '0.75rem', color: '#15803D', display: 'flex', alignItems: 'center', gap: '0.35rem' }}
-                      >
-                        <MessageCircle size={14} />
-                        <span>WhatsApp Update</span>
-                      </button>
+                      {/* WhatsApp Dispatch Button: Admin Only */}
+                      {isOwner && (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const itemsList = (ord.items || []).map((it) => `• ${it.name} (IND ${it.size}) x${it.quantity}`).join('\n');
+                            const text = encodeURIComponent(
+                              `Namaste Shri Manak Kothari ji!\n\nI have an order inquiry for Kothari Footwear:\n*Invoice ID:* #${ord.id}\n*Customer:* ${ord.customer?.name || 'Customer'} (${ord.customer?.phone || ''})\n*Delivery PIN:* ${ord.shippingAddress?.pincode || '383430'}\n*Items:*\n${itemsList}\n*Total Bill:* ₹${ord.pricing?.finalTotal || ord.pricing?.subtotal || 0}\n\nPlease share the live dispatch & courier tracking update.`
+                            );
+                            window.open(`https://wa.me/919427644222?text=${text}`, '_blank');
+                          }}
+                          className="btn btn-secondary"
+                          style={{ padding: '0.45rem 0.8rem', fontSize: '0.75rem', color: '#15803D', display: 'flex', alignItems: 'center', gap: '0.35rem' }}
+                          title="Admin only: WhatsApp Dispatch Update"
+                        >
+                          <MessageCircle size={14} />
+                          <span>WhatsApp Update</span>
+                        </button>
+                      )}
 
                       {/* View Tax Invoice Button */}
                       <Link

@@ -183,36 +183,7 @@ export const CheckoutModal = ({ isOpen, onClose, onOrderPlaced }) => {
         // Safe fallback
       }
 
-      // Automatically dispatch WhatsApp confirmation & invoice PDF link to customer's phone
-      try {
-        const targetPhone = `91${cleanPhone}`;
-        const onlineInvoiceUrl = `${window.location.origin}/invoice/${order.id}`;
-        const purchasedSummary = items.map((it, idx) =>
-          `${idx + 1}. ${it.product.name} (IND ${it.size}) x${it.quantity}`
-        ).join('\n');
 
-        const whatsappText =
-          `✨ *KOTHARI FOOTWEAR - ORDER CONFIRMATION* ✨\n` +
-          `*Est. 1998, Idar, Gujarat*\n\n` +
-          `Namaste ${fullName}!\n` +
-          `Your footwear order has been confirmed successfully.\n\n` +
-          `🧾 *ORDER DETAILS*\n` +
-          `━━━━━━━━━━━━━━━━━━━━━\n` +
-          `*Invoice ID:* #${order.id}\n` +
-          `*Total Bill:* ₹${finalTotal.toLocaleString('en-IN')}\n` +
-          `*Payment Mode:* ${selectedPayMethod}\n` +
-          `*Delivery Address:* ${street}, ${city} (${pincode})\n` +
-          `━━━━━━━━━━━━━━━━━━━━━\n` +
-          `*Items:*\n${purchasedSummary}\n\n` +
-          `📄 *Your Official Tax Invoice PDF & Live Tracking:* \n${onlineInvoiceUrl}\n\n` +
-          `Helpline: +91 94276 44222 (Shri Manak Kothari)\n` +
-          `Thank you for shopping with Kothari Footwear!`;
-
-        const waUrl = `https://api.whatsapp.com/send?phone=${targetPhone}&text=${encodeURIComponent(whatsappText)}`;
-        window.open(waUrl, '_blank');
-      } catch (waErr) {
-        console.warn('Auto WhatsApp dispatch note:', waErr);
-      }
 
       clearCart();
       setIsSubmitting(false);

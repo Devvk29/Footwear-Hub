@@ -268,22 +268,24 @@ export const MyOrdersModal = ({ isOpen, onClose, onBrowseCatalog, onViewInvoice 
                   </div>
 
                   <div style={{ display: 'flex', gap: '0.4rem', flexWrap: 'wrap' }}>
-                    {/* Share on WhatsApp */}
-                    <button
-                      type="button"
-                      onClick={() => {
-                        const itemsList = (ord.items || []).map(it => `• ${it.name} (IND ${it.size}) x${it.quantity}`).join('\n');
-                        const text = encodeURIComponent(
-                          `Namaste Shri Manak Kothari ji!\n\nI have an order inquiry for Kothari Footwear:\n*Invoice ID:* #${ord.id}\n*Customer:* ${ord.customer?.name || 'Customer'} (${ord.customer?.phone || ''})\n*Delivery PIN:* ${ord.shippingAddress?.pincode || '383430'}\n*Items:*\n${itemsList}\n*Total Bill:* ₹${ord.pricing?.finalTotal || ord.pricing?.subtotal || 0}\n\nPlease share the live dispatch & courier tracking update.`
-                        );
-                        window.open(`https://wa.me/919427644222?text=${text}`, '_blank');
-                      }}
-                      className="btn btn-secondary"
-                      style={{ padding: '0.45rem 0.75rem', fontSize: '0.75rem', display: 'flex', alignItems: 'center', gap: '0.3rem', color: '#15803D' }}
-                      title="Direct WhatsApp Dispatch Update with Shri Manak Kothari"
-                    >
-                      <span>💬 WhatsApp Update</span>
-                    </button>
+                    {/* Share on WhatsApp: Admin Only */}
+                    {isOwner && (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const itemsList = (ord.items || []).map(it => `• ${it.name} (IND ${it.size}) x${it.quantity}`).join('\n');
+                          const text = encodeURIComponent(
+                            `Namaste Shri Manak Kothari ji!\n\nI have an order inquiry for Kothari Footwear:\n*Invoice ID:* #${ord.id}\n*Customer:* ${ord.customer?.name || 'Customer'} (${ord.customer?.phone || ''})\n*Delivery PIN:* ${ord.shippingAddress?.pincode || '383430'}\n*Items:*\n${itemsList}\n*Total Bill:* ₹${ord.pricing?.finalTotal || ord.pricing?.subtotal || 0}\n\nPlease share the live dispatch & courier tracking update.`
+                          );
+                          window.open(`https://wa.me/919427644222?text=${text}`, '_blank');
+                        }}
+                        className="btn btn-secondary"
+                        style={{ padding: '0.45rem 0.75rem', fontSize: '0.75rem', display: 'flex', alignItems: 'center', gap: '0.3rem', color: '#15803D' }}
+                        title="Admin only: WhatsApp Dispatch Update"
+                      >
+                        <span>💬 WhatsApp Update</span>
+                      </button>
+                    )}
 
                     <button
                       type="button"

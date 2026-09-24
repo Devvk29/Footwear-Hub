@@ -301,7 +301,7 @@ function ShopApp() {
           setQuickViewProduct(null);
           setIsCheckoutOpen(false);
           addToast(`Order ${order.id} placed successfully!`, 'success');
-          navigate(`/invoice/${order.id}`, { state: { from: '/orders', autoDownload: true } });
+          navigate(`/invoice/${order.id}`, { state: { from: '/orders' } });
         }}
       />
 

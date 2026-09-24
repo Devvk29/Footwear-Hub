@@ -64,15 +64,15 @@ export const AboutPage = () => {
               title="Go to previous page"
             >
               <ArrowLeft size={16} />
-              <span>← Back</span>
+              <span>Back</span>
             </button>
 
             <Link
               to="/"
-              className="btn btn-ghost"
+              className="btn btn-secondary"
               style={{
                 minHeight: '44px',
-                padding: '0.5rem 0.9rem',
+                padding: '0.5rem 1rem',
                 display: 'inline-flex',
                 alignItems: 'center',
                 gap: '0.35rem',
@@ -82,7 +82,7 @@ export const AboutPage = () => {
                 borderRadius: 'var(--radius-md)'
               }}
             >
-              <span>Back to Dashboard</span>
+              <span>Dashboard</span>
             </Link>
 
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.8125rem', color: 'var(--text-muted)', marginLeft: '0.25rem' }}>

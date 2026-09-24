@@ -17,6 +17,7 @@ import {
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from '../firebase';
 import { useDatabase } from '../context/DatabaseContext';
+import { useAuth } from '../context/AuthContext';
 import { STORE_INFO } from '../data/storeInfo';
 import { jsPDF } from 'jspdf';
 import html2canvas from 'html2canvas';
@@ -27,6 +28,7 @@ export const InvoicePage = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { allOrders } = useDatabase();
+  const { isOwner } = useAuth();
 
   const queryId = searchParams.get('invoice') || searchParams.get('order');
   const targetId = (orderId || queryId || '').trim().toUpperCase();
@@ -38,7 +40,6 @@ export const InvoicePage = () => {
   const [isDownloading, setIsDownloading] = useState(false);
   const [isSharing, setIsSharing] = useState(false);
   const [shareNotice, setShareNotice] = useState('');
-  const autoDownloadTriggered = useRef(false);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -81,15 +82,6 @@ export const InvoicePage = () => {
         setLoading(false);
       });
   }, [targetId, allOrders]);
-
-  useEffect(() => {
-    if (order && location.state?.autoDownload && !autoDownloadTriggered.current) {
-      autoDownloadTriggered.current = true;
-      setTimeout(() => {
-        handleDownloadPdf();
-      }, 800);
-    }
-  }, [order?.id]);
 
   const handleBack = () => {
     if (location.state?.from) {
@@ -294,12 +286,12 @@ export const InvoicePage = () => {
     }
   };
 
-  const handleShareEmail = () => {
+  const handleShareEmail = async () => {
     if (!order) return;
+    setIsSharing(true);
     const shipping = order.shippingAddress || {};
     const custEmail = order.customer?.email || shipping.email || '';
     const totalAmount = order.pricing?.finalTotal || order.pricing?.subtotal || order.total || 0;
-    const onlineInvoiceUrl = `${window.location.origin}/invoice/${order.id}`;
 
     const emailSubject = `Official Retail Tax Invoice #${order.id} - Kothari Footwear (Est. 1998)`;
     const emailBody =
@@ -309,15 +301,49 @@ export const InvoicePage = () => {
       `===============================\n` +
       `Invoice Number: #${order.id}\n` +
       `Date: ${order.date || 'Recent Order'}\n` +
-      `Total: Rs. ${totalAmount.toLocaleString('en-IN')}\n` +
-      `Payment: ${order.paymentMethod || 'Verified UPI / COD'}\n\n` +
-      `ONLINE DIGITAL INVOICE LINK:\n${onlineInvoiceUrl}\n\n` +
+      `Total Amount: Rs. ${totalAmount.toLocaleString('en-IN')}\n` +
+      `Payment Status: ${order.paymentMethod || 'Verified UPI / COD'}\n` +
+      `Delivery To: ${shipping.city || 'Idar'} (PIN: ${shipping.pincode || ''})\n` +
+      `Attached Document: Invoice_${order.id}.pdf\n\n` +
       `Store Address: 134, Near Tiranga Circle, Idar, Gujarat - 383430\n` +
       `Owner & Helpline: +91 94276 44222 / manakkothari132@gmail.com\n\n` +
       `With warm regards,\nShri Manak Kothari\nFounder, KOTHARI FOOTWEAR`;
 
-    const mailtoUrl = `mailto:${custEmail}?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`;
-    window.location.href = mailtoUrl;
+    try {
+      const pdf = await generatePdfDocument();
+      if (pdf) {
+        const blob = pdf.output('blob');
+        const file = new File([blob], `Invoice_${order.id}.pdf`, { type: 'application/pdf' });
+
+        if (navigator.canShare && navigator.canShare({ files: [file] })) {
+          try {
+            await navigator.share({
+              title: emailSubject,
+              text: emailBody,
+              files: [file]
+            });
+            setIsSharing(false);
+            return;
+          } catch (shareErr) {
+            console.log('Mobile email share dismissed:', shareErr);
+          }
+        }
+
+        // On desktop: trigger PDF file download and notify
+        triggerPdfBlobDownload(pdf, `Invoice_${order.id}.pdf`);
+        setShareNotice('Invoice PDF downloaded! Opening email — please attach the downloaded Invoice PDF file.');
+        setTimeout(() => setShareNotice(''), 7000);
+      }
+
+      const mailtoUrl = `mailto:${custEmail}?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`;
+      window.location.href = mailtoUrl;
+    } catch (e) {
+      console.warn('Email share note:', e);
+      const mailtoUrl = `mailto:${custEmail}?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`;
+      window.location.href = mailtoUrl;
+    } finally {
+      setIsSharing(false);
+    }
   };
 
   if (loading) {
@@ -400,23 +426,23 @@ export const InvoicePage = () => {
             type="button"
             onClick={handleBack}
             className="btn btn-secondary"
-            style={{ minHeight: '44px', minWidth: '44px', padding: '0.5rem 1rem', fontSize: '0.85rem', fontWeight: 700, display: 'inline-flex', alignItems: 'center', gap: '0.4rem', cursor: 'pointer', borderRadius: 'var(--radius-md)' }}
+            style={{ minHeight: '44px', padding: '0.5rem 1rem', fontSize: '0.85rem', fontWeight: 700, display: 'inline-flex', alignItems: 'center', gap: '0.4rem', cursor: 'pointer', borderRadius: 'var(--radius-md)' }}
             title="Go to previous page"
           >
             <ArrowLeft size={16} />
-            <span>← Back</span>
+            <span>Back</span>
           </button>
           <Link
             to="/"
-            className="btn btn-ghost"
-            style={{ minHeight: '44px', padding: '0.5rem 0.9rem', fontSize: '0.85rem', fontWeight: 700, textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '0.35rem', borderRadius: 'var(--radius-md)' }}
+            className="btn btn-secondary"
+            style={{ minHeight: '44px', padding: '0.5rem 1rem', fontSize: '0.85rem', fontWeight: 700, textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '0.35rem', borderRadius: 'var(--radius-md)' }}
           >
-            <span>Back to Dashboard</span>
+            <span>Dashboard</span>
           </Link>
           <Link
             to="/orders"
             className="btn btn-secondary"
-            style={{ minHeight: '44px', padding: '0.5rem 0.85rem', fontSize: '0.82rem', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', borderRadius: 'var(--radius-md)' }}
+            style={{ minHeight: '44px', padding: '0.5rem 1rem', fontSize: '0.85rem', fontWeight: 700, textDecoration: 'none', display: 'inline-flex', alignItems: 'center', borderRadius: 'var(--radius-md)' }}
           >
             My Orders
           </Link>
@@ -453,25 +479,30 @@ export const InvoicePage = () => {
             <Download size={14} />
             <span>{isDownloading ? 'Preparing PDF...' : 'Download PDF'}</span>
           </button>
-          <button
-            type="button"
-            onClick={handleShareWhatsApp}
-            disabled={isSharing}
-            className="btn btn-secondary"
-            style={{ padding: '0.45rem 0.85rem', fontSize: '0.8rem', color: '#15803D', borderColor: '#BBF7D0', background: '#F0FDF4' }}
-          >
-            <MessageCircle size={14} />
-            <span>WhatsApp</span>
-          </button>
-          <button
-            type="button"
-            onClick={handleShareEmail}
-            className="btn btn-secondary"
-            style={{ padding: '0.45rem 0.85rem', fontSize: '0.8rem' }}
-          >
-            <Mail size={14} />
-            <span>Email</span>
-          </button>
+          {/* WhatsApp & Email sharing: Admin Panel only */}
+          {(isOwner || location.state?.from === '/admin') && (
+            <>
+              <button
+                type="button"
+                onClick={handleShareWhatsApp}
+                disabled={isSharing}
+                className="btn btn-secondary"
+                style={{ padding: '0.45rem 0.85rem', fontSize: '0.8rem', color: '#15803D', borderColor: '#BBF7D0', background: '#F0FDF4' }}
+              >
+                <MessageCircle size={14} />
+                <span>WhatsApp</span>
+              </button>
+              <button
+                type="button"
+                onClick={handleShareEmail}
+                className="btn btn-secondary"
+                style={{ padding: '0.45rem 0.85rem', fontSize: '0.8rem' }}
+              >
+                <Mail size={14} />
+                <span>Email</span>
+              </button>
+            </>
+          )}
         </div>
       </div>
 

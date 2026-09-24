@@ -54,8 +54,21 @@ export const AuthModal = ({
   const [error, setError] = useState('');
   const [successMsg, setSuccessMsg] = useState('');
 
-  // Reset or set appropriate view when modal is opened
+  const resetAllInputs = () => {
+    setLoginName('');
+    setLoginPin('');
+    setSignupName('');
+    setSignupPhone('');
+    setSignupEmail('');
+    setSignupPin('');
+    setOtpDigits(['', '', '', '']);
+    setError('');
+    setSuccessMsg('');
+  };
+
+  // Reset or set appropriate view when modal is opened or mode switched
   useEffect(() => {
+    resetAllInputs();
     if (authModalState.isOpen) {
       setIsSubmitting(false);
       const original = document.body.style.overflow;
@@ -71,14 +84,6 @@ export const AuthModal = ({
         document.body.style.overflow = original;
       };
     } else {
-      setError('');
-      setSuccessMsg('');
-      setLoginName('');
-      setLoginPin('');
-      setSignupName('');
-      setSignupPhone('');
-      setSignupEmail('');
-      setSignupPin('');
       setMode('login');
     }
   }, [authModalState.isOpen, isLoggedIn]);
@@ -477,7 +482,7 @@ export const AuthModal = ({
               <div style={{ display: 'flex', background: 'var(--bg-tertiary)', padding: '3px', borderRadius: 'var(--radius-md)', marginBottom: '1.25rem' }}>
                 <button
                   type="button"
-                  onClick={() => { setMode('login'); setError(''); setSuccessMsg(''); }}
+                  onClick={() => { setMode('login'); resetAllInputs(); }}
                   style={{
                     flex: 1,
                     padding: '0.55rem',
@@ -502,7 +507,7 @@ export const AuthModal = ({
 
                 <button
                   type="button"
-                  onClick={() => { setMode('signup'); setError(''); setSuccessMsg(''); }}
+                  onClick={() => { setMode('signup'); resetAllInputs(); }}
                   style={{
                     flex: 1,
                     padding: '0.55rem',
@@ -542,6 +547,10 @@ export const AuthModal = ({
             {/* 1. SIGN IN FORM */}
             {mode === 'login' && (
               <form onSubmit={handleLoginSubmit} autoComplete="off" style={{ display: 'flex', flexDirection: 'column', gap: '0.9rem' }}>
+                {/* Dummy anti-autofill absorbers */}
+                <input type="text" style={{ display: 'none' }} tabIndex={-1} aria-hidden="true" autoComplete="off" />
+                <input type="password" style={{ display: 'none' }} tabIndex={-1} aria-hidden="true" autoComplete="new-password" />
+
                 <div>
                   <label style={{ display: 'block', fontSize: '0.78rem', fontWeight: 700, color: 'var(--text-secondary)', marginBottom: '0.35rem' }}>
                     Registered Name, Mobile, or Gmail
@@ -550,7 +559,8 @@ export const AuthModal = ({
                     <User size={15} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
                     <input
                       type="text"
-                      name="kf_fresh_username_field"
+                      name="kf_si_identifier"
+                      id="kf_si_identifier"
                       autoComplete="off"
                       placeholder="e.g. Rahul Sharma / 9876543210"
                       value={loginName}
@@ -579,7 +589,8 @@ export const AuthModal = ({
                     <Lock size={15} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
                     <input
                       type="password"
-                      name="kf_fresh_pin_field"
+                      name="kf_si_pin"
+                      id="kf_si_pin"
                       autoComplete="new-password"
                       placeholder="Enter 4-digit PIN (e.g. 1234)"
                       value={loginPin}
@@ -623,6 +634,10 @@ export const AuthModal = ({
             {/* 2. SIGN UP FORM */}
             {mode === 'signup' && (
               <form onSubmit={handleSignupSubmit} autoComplete="off" style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
+                {/* Dummy anti-autofill absorbers to stop browser from pairing email + password with saved login */}
+                <input type="text" style={{ display: 'none' }} tabIndex={-1} aria-hidden="true" autoComplete="off" />
+                <input type="password" style={{ display: 'none' }} tabIndex={-1} aria-hidden="true" autoComplete="new-password" />
+
                 <div>
                   <label style={{ display: 'block', fontSize: '0.78rem', fontWeight: 700, color: 'var(--text-secondary)', marginBottom: '0.35rem' }}>
                     Full Name *
@@ -631,6 +646,9 @@ export const AuthModal = ({
                     <User size={15} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
                     <input
                       type="text"
+                      name="kf_su_fullname"
+                      id="kf_su_fullname"
+                      autoComplete="off"
                       placeholder="e.g. Amit Patel"
                       value={signupName}
                       onChange={(e) => setSignupName(e.target.value)}
@@ -659,6 +677,9 @@ export const AuthModal = ({
                     <Phone size={15} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
                     <input
                       type="tel"
+                      name="kf_su_phone"
+                      id="kf_su_phone"
+                      autoComplete="off"
                       maxLength={10}
                       placeholder="e.g. 9876543210"
                       value={signupPhone}
@@ -685,7 +706,11 @@ export const AuthModal = ({
                     Email / Gmail Address (Optional)
                   </label>
                   <input
-                    type="email"
+                    type="text"
+                    inputMode="email"
+                    name="kf_su_email_address"
+                    id="kf_su_email_address"
+                    autoComplete="off"
                     placeholder="e.g. amit.patel@gmail.com"
                     value={signupEmail}
                     onChange={(e) => setSignupEmail(e.target.value)}
@@ -709,6 +734,9 @@ export const AuthModal = ({
                     <Lock size={15} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
                     <input
                       type="password"
+                      name="kf_su_new_pin"
+                      id="kf_su_new_pin"
+                      autoComplete="new-password"
                       maxLength={8}
                       placeholder="e.g. 1234"
                       value={signupPin}

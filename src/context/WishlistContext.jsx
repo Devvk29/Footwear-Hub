@@ -1,92 +1,118 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useRef } from 'react';
+import { doc, getDoc, setDoc } from 'firebase/firestore';
+import { db } from '../firebase';
 import { useAuth } from './AuthContext';
 
 const WishlistContext = createContext();
 
+// Stable localStorage cache key — always keyed by phone (never by session-id)
+const localKey = (phone) => `kf_wishlist_${phone}`;
+
+// Write an array of product IDs to Firestore (non-blocking)
+const syncToFirestore = async (phone, ids) => {
+  if (!phone) return;
+  try {
+    await setDoc(
+      doc(db, 'wishlists', phone),
+      { productIds: ids, updatedAt: Date.now() },
+      { merge: true }
+    );
+  } catch (e) {
+    // Non-critical: localStorage cache still preserves it locally
+    console.warn('Wishlist Firestore sync note:', e);
+  }
+};
+
 export const WishlistProvider = ({ children }) => {
   const { user, isLoggedIn, openAuthModal } = useAuth();
 
-  // Purge any old global wishlist key that leaks into guest/other users
+  // Stable phone from the signed-in user (never changes across sessions for the same account)
+  const userPhone = user?.phone || null;
+
+  const [wishlistIds, setWishlistIds] = useState([]);
+  // True while we are loading from Firestore — suppress writes during this window
+  const [loading, setLoading] = useState(false);
+  // Ref to skip the first save-to-Firestore triggered by the load itself
+  const isInitialLoad = useRef(true);
+
+  // --- Purge legacy global key (one-time cleanup) ---
   useEffect(() => {
-    try {
-      localStorage.removeItem('kf_wishlist');
-    } catch (e) {
-      // safe ignore
-    }
+    try { localStorage.removeItem('kf_wishlist'); } catch (_) {}
   }, []);
 
-  // Wishlist strictly belongs to the signed-in user only
-  const [wishlistIds, setWishlistIds] = useState(() => {
-    if (!user) return [];
-    try {
-      const userKey = `kf_wishlist_${user.id || user.phone}`;
-      const saved = localStorage.getItem(userKey);
-      return saved ? JSON.parse(saved) : [];
-    } catch {
-      return [];
-    }
-  });
-
-  // When user logs in, load ONLY that user's wishlist; on logout, clear wishlist immediately
+  // --- On user change: load wishlist from Firestore ---
   useEffect(() => {
-    if (!user) {
+    if (!userPhone) {
+      // Guest or logged-out: clear in-memory list; do NOT touch localStorage cache
       setWishlistIds([]);
-    } else {
-      try {
-        const userKey = `kf_wishlist_${user.id || user.phone}`;
-        const saved = localStorage.getItem(userKey);
-        setWishlistIds(saved ? JSON.parse(saved) : []);
-      } catch {
-        setWishlistIds([]);
-      }
+      setLoading(false);
+      return;
     }
-  }, [user]);
 
-  // Persist wishlist items scoped strictly to the current user
+    // Start loading: read localStorage cache first (fast/optimistic), then Firestore
+    setLoading(true);
+    isInitialLoad.current = true;
+
+    // 1. Warm from localStorage cache immediately so UI renders instantly
+    let cached = [];
+    try {
+      const raw = localStorage.getItem(localKey(userPhone));
+      cached = raw ? JSON.parse(raw) : [];
+    } catch (_) { cached = []; }
+    setWishlistIds(cached);
+
+    // 2. Fetch from Firestore (authoritative) and merge
+    getDoc(doc(db, 'wishlists', userPhone))
+      .then((snap) => {
+        if (snap.exists()) {
+          const cloudIds = snap.data().productIds || [];
+          // Union of local cache and cloud — handles offline edits from another device
+          const merged = Array.from(new Set([...cached, ...cloudIds]));
+          setWishlistIds(merged);
+          try { localStorage.setItem(localKey(userPhone), JSON.stringify(merged)); } catch (_) {}
+        } else if (cached.length > 0) {
+          // No cloud record yet — seed Firestore with the local cache
+          syncToFirestore(userPhone, cached);
+        }
+      })
+      .catch((e) => {
+        // Network error — local cache is the fallback; stay with it silently
+        console.warn('Wishlist Firestore load note:', e);
+      })
+      .finally(() => {
+        setLoading(false);
+        // Writes are now safe
+        isInitialLoad.current = false;
+      });
+  }, [userPhone]);
+
+  // --- Persist to Firestore + localStorage on every change (skip during initial load) ---
   useEffect(() => {
-    if (user) {
-      try {
-        const userKey = `kf_wishlist_${user.id || user.phone}`;
-        localStorage.setItem(userKey, JSON.stringify(wishlistIds));
-      } catch (e) {
-        // safe ignore
-      }
-    }
-  }, [wishlistIds, user]);
+    if (loading || isInitialLoad.current || !userPhone) return;
+    try { localStorage.setItem(localKey(userPhone), JSON.stringify(wishlistIds)); } catch (_) {}
+    syncToFirestore(userPhone, wishlistIds);
+  }, [wishlistIds, userPhone, loading]);
+
+  // --- Toggle (requires login) ---
+  const performToggle = (productId) => {
+    setWishlistIds((prev) =>
+      prev.includes(productId)
+        ? prev.filter((id) => id !== productId)
+        : [...prev, productId]
+    );
+  };
 
   const toggleWishlist = (productId) => {
     if (!isLoggedIn || !user) {
-      // Must open login flow instead of saving for guest
       openAuthModal('wishlist', (loggedInUser) => {
         if (loggedInUser) {
-          const userKey = `kf_wishlist_${loggedInUser.id || loggedInUser.phone}`;
-          let existing = [];
-          try {
-            const saved = localStorage.getItem(userKey);
-            existing = saved ? JSON.parse(saved) : [];
-          } catch {
-            existing = [];
-          }
-          const updated = existing.includes(productId)
-            ? existing.filter(id => id !== productId)
-            : [...existing, productId];
-          setWishlistIds(updated);
-          try {
-            localStorage.setItem(userKey, JSON.stringify(updated));
-          } catch (e) {}
+          // Defer by 300 ms so the login-triggered useEffect above has time to hydrate
+          setTimeout(() => performToggle(productId), 300);
         }
       });
       return;
     }
     performToggle(productId);
-  };
-
-  const performToggle = (productId) => {
-    setWishlistIds(prev =>
-      prev.includes(productId)
-        ? prev.filter(id => id !== productId)
-        : [...prev, productId]
-    );
   };
 
   const isWishlisted = (productId) => {
@@ -96,11 +122,9 @@ export const WishlistProvider = ({ children }) => {
 
   const clearWishlist = () => {
     setWishlistIds([]);
-    if (user) {
-      try {
-        const userKey = `kf_wishlist_${user.id || user.phone}`;
-        localStorage.removeItem(userKey);
-      } catch (e) {}
+    if (userPhone) {
+      try { localStorage.removeItem(localKey(userPhone)); } catch (_) {}
+      syncToFirestore(userPhone, []);
     }
   };
 
@@ -110,6 +134,7 @@ export const WishlistProvider = ({ children }) => {
     <WishlistContext.Provider
       value={{
         wishlistIds: (isLoggedIn && user) ? wishlistIds : [],
+        wishlistLoading: loading,
         toggleWishlist,
         isWishlisted,
         wishlistCount: count,
@@ -122,3 +147,4 @@ export const WishlistProvider = ({ children }) => {
 };
 
 export const useWishlist = () => useContext(WishlistContext);
+

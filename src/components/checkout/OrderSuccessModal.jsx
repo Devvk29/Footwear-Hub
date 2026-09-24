@@ -21,8 +21,10 @@ import { jsPDF } from 'jspdf';
 import html2canvas from 'html2canvas';
 import confetti from 'canvas-confetti';
 import { STORE_INFO } from '../../data/storeInfo';
+import { useAuth } from '../../context/AuthContext';
 
 export const OrderSuccessModal = ({ order, isOpen, onClose }) => {
+  const { isOwner } = useAuth();
   const [isDownloading, setIsDownloading] = useState(false);
   const [isSharing, setIsSharing] = useState(false);
   const [cachedPdfObj, setCachedPdfObj] = useState(null);
@@ -354,8 +356,7 @@ export const OrderSuccessModal = ({ order, isOpen, onClose }) => {
       `*Final Total:* ₹${totalAmount.toLocaleString('en-IN')}\n` +
       `*Payment Status:* ${order.paymentMethod || 'Verified UPI / COD'}\n` +
       `━━━━━━━━━━━━━━━━━━━━━━━\n` +
-      `📄 *Attached PDF:* Official Tax Invoice (A4 Standard)\n` +
-      `🔗 *View / Download Invoice Online:*\n${onlineInvoiceUrl}\n\n` +
+      `📄 *Attached PDF:* Official Tax Invoice (Invoice_${order.id}.pdf)\n\n` +
       `📦 *Dispatch From:* 134, Near Tiranga Circle, Idar, Gujarat - 383430\n` +
       `📞 *Owner Helpline:* +91 94276 44222 (Shri Manak Kothari)\n\n` +
       `Thank you for trusting Kothari Footwear for authentic quality!`;
@@ -445,7 +446,7 @@ export const OrderSuccessModal = ({ order, isOpen, onClose }) => {
       `ORDERED ITEMS:\n${itemsText}\n\n` +
       `DELIVERY ADDRESS:\n${shipping.street}, ${shipping.city}, ${shipping.state} - ${shipping.pincode}\n` +
       `Contact Phone: +91 ${shipping.phone}\n\n` +
-      `ONLINE DIGITAL INVOICE COPY:\n${onlineInvoiceUrl}\n\n` +
+      `ATTACHED DOCUMENT: Invoice_${order.id}.pdf\n\n` +
       `DISPATCHED FROM:\n` +
       `Kothari Footwear\n134, Near Tiranga Circle, Idar, Gujarat - 383430\n` +
       `Owner & Store Helpline: +91 94276 44222 / manakkothari132@gmail.com\n\n` +
@@ -956,31 +957,34 @@ export const OrderSuccessModal = ({ order, isOpen, onClose }) => {
               <span>{isDownloading ? 'Preparing PDF...' : 'Download PDF'}</span>
             </button>
 
-            {/* WhatsApp Updates with PDF Attachment */}
-            <button
-              type="button"
-              onClick={handleWhatsAppCustomerInvoice}
-              disabled={isSharing}
-              className="btn btn-secondary"
-              style={{ padding: '0.65rem', fontSize: '0.8125rem', color: '#15803D', borderColor: '#BBF7D0', background: '#F0FDF4' }}
-              title="Share PDF Invoice directly on WhatsApp"
-            >
-              <MessageCircle size={15} />
-              <span>WhatsApp Invoice (PDF)</span>
-            </button>
+            {/* Admin Only: WhatsApp & Email Sharing with Attached PDF */}
+            {isOwner && (
+              <>
+                <button
+                  type="button"
+                  onClick={handleWhatsAppCustomerInvoice}
+                  disabled={isSharing}
+                  className="btn btn-secondary"
+                  style={{ padding: '0.65rem', fontSize: '0.8125rem', color: '#15803D', borderColor: '#BBF7D0', background: '#F0FDF4' }}
+                  title="Admin only: Share PDF Invoice directly on WhatsApp"
+                >
+                  <MessageCircle size={15} />
+                  <span>WhatsApp Invoice (PDF)</span>
+                </button>
 
-            {/* Email Receipt with PDF Attachment */}
-            <button
-              type="button"
-              onClick={handleEmailCustomerInvoice}
-              disabled={isSharing}
-              className="btn btn-secondary"
-              style={{ padding: '0.65rem', fontSize: '0.8125rem', color: '#1C1917' }}
-              title="Share PDF Invoice via Email"
-            >
-              <Mail size={15} />
-              <span>Email Receipt (PDF)</span>
-            </button>
+                <button
+                  type="button"
+                  onClick={handleEmailCustomerInvoice}
+                  disabled={isSharing}
+                  className="btn btn-secondary"
+                  style={{ padding: '0.65rem', fontSize: '0.8125rem', color: '#1C1917' }}
+                  title="Admin only: Share PDF Invoice via Email"
+                >
+                  <Mail size={15} />
+                  <span>Email Receipt (PDF)</span>
+                </button>
+              </>
+            )}
 
             {/* Print Official Invoice */}
             <button

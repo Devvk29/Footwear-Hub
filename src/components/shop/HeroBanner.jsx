@@ -1,5 +1,5 @@
 import React from 'react';
-import { ArrowRight, Sparkles, ShieldCheck, CheckCircle2 } from 'lucide-react';
+import { Sparkles, ShieldCheck, CheckCircle2 } from 'lucide-react';
 
 export const HeroBanner = ({ onSelectGender, onOpenSizeGuide, onOpenStory, onOpenAdmin }) => {
   return (
@@ -82,41 +82,6 @@ export const HeroBanner = ({ onSelectGender, onOpenSizeGuide, onOpenStory, onOpe
             <span style={{ color: 'var(--accent-sage)' }}>Buy 2: 10% Instant OFF</span>
             <span style={{ color: 'var(--border-medium)' }}>•</span>
             <span style={{ color: '#B45309' }}>Buy 3+: 15% Instant OFF</span>
-          </div>
-
-          {/* Fast Navigation Buttons */}
-          <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '0.75rem', marginTop: '0.25rem' }}>
-            <button
-              type="button"
-              onClick={() => onSelectGender('Men')}
-              className="btn btn-primary"
-              style={{
-                padding: '0.65rem 1.4rem',
-                fontSize: '0.875rem',
-                borderRadius: 'var(--radius-full)',
-                background: '#1C1917',
-                border: '1px solid #1C1917'
-              }}
-            >
-              <span>Men’s Collection (IND 6–12)</span>
-              <ArrowRight size={15} />
-            </button>
-
-            <button
-              type="button"
-              onClick={() => onSelectGender('Women')}
-              className="btn btn-secondary"
-              style={{
-                padding: '0.65rem 1.4rem',
-                fontSize: '0.875rem',
-                borderRadius: 'var(--radius-full)',
-                background: '#FFFFFF',
-                border: '1.5px solid var(--border-medium)'
-              }}
-            >
-              <span>Women’s Collection (IND 3–9)</span>
-              <ArrowRight size={15} />
-            </button>
           </div>
 
           {/* Minimal 3-Pillar Badges */}
