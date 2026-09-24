@@ -4,6 +4,7 @@ import { Star, Heart, Eye } from 'lucide-react';
 import { useWishlist } from '../../context/WishlistContext';
 import { INITIAL_PRODUCTS } from '../../data/products';
 import { getColorHex } from '../../utils/colorUtils';
+import { getAssetUrl } from '../../utils/assetUrl';
 
 export const ProductCard = ({ product, onQuickView }) => {
   const navigate = useNavigate();
@@ -59,7 +60,7 @@ export const ProductCard = ({ product, onQuickView }) => {
       <div className="shoe-image-wrap" style={{ position: 'relative', width: '100%', paddingTop: '85%', background: '#F3EFE9', overflow: 'hidden' }}>
         <img
           key={activeImage}
-          src={activeImage}
+          src={getAssetUrl(activeImage)}
           alt={`${product.name} - ${activeColorName || 'Default'}`}
           loading="lazy"
           style={{

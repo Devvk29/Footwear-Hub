@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { BookOpen, ArrowRight, Sparkles, Clock, X, CheckCircle, ShieldCheck } from 'lucide-react';
+import { getAssetUrl } from '../../utils/assetUrl';
 
 const ARTICLES = [
   {
@@ -7,7 +8,7 @@ const ARTICLES = [
     title: "The Art of Handcrafted Mojaris & Juttis: 28 Years in Idar",
     tag: "Heritage Craft",
     readTime: "3 min read",
-    image: "/images/products/women_bridal_jutti_1789973887134.jpg",
+    image: getAssetUrl("/images/products/women_bridal_jutti_1789973887134.jpg"),
     summary: "Discover how traditional artisans in Idar, Gujarat hand-stitch double-cushioned bite-free juttis with pure zari work for festive elegance and all-day ease.",
     content: [
       "For over two decades in Idar's historic market, Kothari Footwear has worked alongside generational craftsmen who treat shoe-making as an heirloom art. Traditional Indian festive footwear often suffered from stiff back-counters that caused shoe bites.",
@@ -20,7 +21,7 @@ const ARTICLES = [
     title: "Doctor-Recommended Orthopedic Soles for Indian Homes",
     tag: "Foot Health",
     readTime: "4 min read",
-    image: "/images/products/women_doctor_ortho_1789974034870.jpg",
+    image: getAssetUrl("/images/products/women_doctor_ortho_1789974034870.jpg"),
     summary: "Why hard tiled floors cause heel pain and how orthopedic anatomical footbeds provide relief for plantar fasciitis, knee joints, and back posture.",
     content: [
       "Walking barefoot on hard marble, vitrified tiles, and concrete surfaces exerts direct impact on your calcaneus (heel bone). Over time, this leads to morning heel stiffness, calcaneal spurs, and knee fatigue.",
@@ -33,7 +34,7 @@ const ARTICLES = [
     title: "Vegetable-Tanned Leather: Why Natural Curing Matters",
     tag: "Material Science",
     readTime: "3 min read",
-    image: "/images/products/men_oxford_leather_1789973432066.jpg",
+    image: getAssetUrl("/images/products/men_oxford_leather_1789973432066.jpg"),
     summary: "Understand the difference between chemical chrome tanning and artisanal vegetable curing with natural tree barks for breathable, odor-free formal shoes.",
     content: [
       "Commercial mass-market shoes often use heavy chromium salts to speed up tanning, which traps moisture and produces unpleasant odor in humid Indian climates.",
@@ -46,7 +47,7 @@ const ARTICLES = [
     title: "Monsoon & Summer Footwear Care: 5 Master Tips",
     tag: "Footwear Care",
     readTime: "2 min read",
-    image: "/images/products/women_crocs_pastel_1789973846505.jpg",
+    image: getAssetUrl("/images/products/women_crocs_pastel_1789973846505.jpg"),
     summary: "Essential advice from Shri Manak Kothari on washing waterproof clogs, preserving leather during monsoon humidity, and drying soles without damage.",
     content: [
       "1. Never dry leather footwear under direct scorching noon sunlight — always dry in a well-ventilated shaded room to prevent leather cracking.",

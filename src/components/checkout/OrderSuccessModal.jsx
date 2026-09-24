@@ -335,7 +335,8 @@ export const OrderSuccessModal = ({ order, isOpen, onClose }) => {
       `${idx + 1}. ${it.name} (IND ${it.size}, ${it.color}) x${it.quantity} - ₹${(it.price * it.quantity).toLocaleString('en-IN')}`
     ).join('\n');
 
-    const onlineInvoiceUrl = `${window.location.origin}/?invoice=${order.id}`;
+    const base = (import.meta.env.BASE_URL || '/').replace(/\/+$/, '');
+    const onlineInvoiceUrl = `${window.location.origin}${base}/invoice/${order.id}`;
 
     const msg =
       `✨ *GREETINGS FROM KOTHARI FOOTWEAR (Est. 1998)* ✨\n\n` +
@@ -424,7 +425,8 @@ export const OrderSuccessModal = ({ order, isOpen, onClose }) => {
     setIsSharing(true);
     const custEmail = order.customer?.email || shipping.email || '';
     const totalAmount = order.pricing?.finalTotal || order.pricing?.subtotal || 0;
-    const onlineInvoiceUrl = `${window.location.origin}/?invoice=${order.id}`;
+    const base = (import.meta.env.BASE_URL || '/').replace(/\/+$/, '');
+    const onlineInvoiceUrl = `${window.location.origin}${base}/invoice/${order.id}`;
 
     const itemsText = (order.items || []).map((it, idx) =>
       `${idx + 1}. ${it.name} (IND ${it.size}, Color: ${it.color}) x${it.quantity} - Rs. ${(it.price * it.quantity).toLocaleString('en-IN')}`

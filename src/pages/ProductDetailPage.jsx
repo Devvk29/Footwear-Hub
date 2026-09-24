@@ -19,6 +19,7 @@ import { useCart } from '../context/CartContext';
 import { useWishlist } from '../context/WishlistContext';
 import { INITIAL_PRODUCTS, getProductStockForSize } from '../data/products';
 import { getColorHex } from '../utils/colorUtils';
+import { getAssetUrl } from '../utils/assetUrl';
 import { STORE_INFO } from '../data/storeInfo';
 
 export const ProductDetailPage = ({ onOpenSizeGuide, onOpenCheckout }) => {
@@ -194,7 +195,7 @@ export const ProductDetailPage = ({ onOpenSizeGuide, onOpenCheckout }) => {
             boxShadow: '0 4px 20px rgba(0,0,0,0.06)'
           }}>
             <img
-              src={activeImage || product.image}
+              src={getAssetUrl(activeImage || product.image)}
               alt={product.name}
               style={{
                 position: 'absolute',
@@ -241,7 +242,7 @@ export const ProductDetailPage = ({ onOpenSizeGuide, onOpenCheckout }) => {
                     flexShrink: 0
                   }}
                 >
-                  <img src={imgUrl} alt={`Thumbnail ${idx + 1}`} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                  <img src={getAssetUrl(imgUrl)} alt={`Thumbnail ${idx + 1}`} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                 </button>
               ))}
             </div>
@@ -517,7 +518,7 @@ export const ProductDetailPage = ({ onOpenSizeGuide, onOpenCheckout }) => {
               >
                 <div style={{ background: '#FFFFFF', borderRadius: '12px', border: '1px solid #E5E7EB', overflow: 'hidden', padding: '0.75rem' }}>
                   <div style={{ width: '100%', paddingTop: '85%', position: 'relative', background: '#F3EFE9', borderRadius: '8px', overflow: 'hidden', marginBottom: '0.5rem' }}>
-                    <img src={p.image} alt={p.name} style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover' }} />
+                    <img src={getAssetUrl(p.image)} alt={p.name} style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover' }} />
                   </div>
                   <h4 style={{ fontSize: '0.9rem', fontWeight: 800, color: '#111827', margin: '0 0 2px' }}>{p.name}</h4>
                   <div style={{ fontSize: '0.75rem', color: '#6B7280', marginBottom: '4px' }}>{p.brand} • {p.gender}</div>

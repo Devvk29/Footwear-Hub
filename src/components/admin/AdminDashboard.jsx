@@ -4,6 +4,7 @@ import { useDatabase } from '../../context/DatabaseContext';
 import { useAuth } from '../../context/AuthContext';
 import { STORE_INFO } from '../../data/storeInfo';
 import { getProductStockForSize, getTotalProductStock } from '../../data/products';
+import { getAssetUrl } from '../../utils/assetUrl';
 import { EditProductModal } from './EditProductModal';
 import { OrderSuccessModal } from '../checkout/OrderSuccessModal';
 import {
@@ -649,7 +650,7 @@ export const AdminDashboard = ({ isOpen, onClose }) => {
                       {/* Left: Thumbnail & Details */}
                       <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem', flex: 1, minWidth: '220px' }}>
                         <div style={{ width: '64px', height: '64px', borderRadius: '8px', overflow: 'hidden', background: '#F3F4F6', flexShrink: 0, border: '1px solid #E5E7EB' }}>
-                          <img src={p.image} alt={p.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                          <img src={getAssetUrl(p.image)} alt={p.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                         </div>
 
                         <div style={{ flex: 1 }}>
@@ -832,7 +833,7 @@ export const AdminDashboard = ({ isOpen, onClose }) => {
                       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.75rem' }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem' }}>
                           <div style={{ width: '54px', height: '54px', borderRadius: '8px', overflow: 'hidden', background: '#F3F4F6', flexShrink: 0 }}>
-                            <img src={p.image} alt={p.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                            <img src={getAssetUrl(p.image)} alt={p.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                           </div>
                           <div>
                             <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.75rem', color: '#4B5563' }}>
@@ -1130,7 +1131,8 @@ export const AdminDashboard = ({ isOpen, onClose }) => {
                               const rawPhone = (ord.customer?.phone || ord.shippingAddress?.phone || '').replace(/\D/g, '');
                               const cleanPhone = rawPhone.length >= 10 ? rawPhone.slice(-10) : '';
                               const targetPhone = cleanPhone ? `91${cleanPhone}` : `91${STORE_INFO.contact.whatsapp}`;
-                              const onlineInvoiceUrl = `${window.location.origin}/invoice/${ord.id}`;
+                              const base = (import.meta.env.BASE_URL || '/').replace(/\/+$/, '');
+                              const onlineInvoiceUrl = `${window.location.origin}${base}/invoice/${ord.id}`;
                               const itemsText = (ord.items || []).map((it, idx) =>
                                 `${idx + 1}. ${it.name} (IND ${it.size}) x${it.quantity} - ₹${((it.price || 0) * (it.quantity || 1)).toLocaleString('en-IN')}`
                               ).join('\n');
@@ -1177,7 +1179,8 @@ export const AdminDashboard = ({ isOpen, onClose }) => {
                               type="button"
                               onClick={() => {
                                 const custEmail = ord.customer?.email || ord.shippingAddress?.email;
-                                const onlineInvoiceUrl = `${window.location.origin}/invoice/${ord.id}`;
+                                const base = (import.meta.env.BASE_URL || '/').replace(/\/+$/, '');
+                                const onlineInvoiceUrl = `${window.location.origin}${base}/invoice/${ord.id}`;
                                 const subject = `Retail Tax Invoice #${ord.id} - Kothari Footwear (Est. 1998)`;
                                 const body =
                                   `Dear ${ord.customer?.name || ord.shippingAddress?.fullName || 'Valued Customer'},\n\n` +

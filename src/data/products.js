@@ -18,9 +18,11 @@
 // brand assets/affiliate feeds) before launch; do not present stock photos to customers as the
 // literal product they will receive.
 
+import { normalizeProducts } from '../utils/assetUrl';
+
 export const CATALOG_VERSION = "9.0";
 
-export const INITIAL_PRODUCTS = [
+const RAW_INITIAL_PRODUCTS = [
 
   // ========================================================================
   // SLIPPERS & DAILY CHAPPALS — PARAGON
@@ -1481,6 +1483,7 @@ export const INITIAL_PRODUCTS = [
   }
 ];
 
+export const INITIAL_PRODUCTS = normalizeProducts(RAW_INITIAL_PRODUCTS);
 export const PRODUCTS = INITIAL_PRODUCTS;
 
 // Indian Size Conversion Guide (cm, UK/IND, EU, US)

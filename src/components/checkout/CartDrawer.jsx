@@ -14,6 +14,7 @@ import {
   Tag,
   Check
 } from 'lucide-react';
+import { getAssetUrl } from '../../utils/assetUrl';
 
 export const CartDrawer = ({ onOpenCheckout, onOpenSizeGuide, onOpenSampleInvoice }) => {
   const {
@@ -266,7 +267,7 @@ export const CartDrawer = ({ onOpenCheckout, onOpenSizeGuide, onOpenSampleInvoic
                   background: '#F3EFE9',
                   flexShrink: 0
                 }}>
-                  <img src={item.product.image} alt={item.product.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                  <img src={getAssetUrl(item.product.image)} alt={item.product.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                 </div>
 
                 {/* Info */}

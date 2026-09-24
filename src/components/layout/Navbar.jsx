@@ -5,6 +5,7 @@ import { useCart } from '../../context/CartContext';
 import { useWishlist } from '../../context/WishlistContext';
 import { useDatabase } from '../../context/DatabaseContext';
 import { STORE_INFO } from '../../data/storeInfo';
+import { getAssetUrl } from '../../utils/assetUrl';
 import { MobileSideDrawer } from './MobileSideDrawer';
 import {
   ShoppingBag,
@@ -389,7 +390,7 @@ export const Navbar = ({
                           >
                             <div style={{ display: 'flex', alignItems: 'center', gap: '0.55rem' }}>
                               <img
-                                src={item.image}
+                                src={getAssetUrl(item.image)}
                                 alt={item.name}
                                 style={{ width: '36px', height: '36px', borderRadius: '4px', objectFit: 'cover' }}
                               />

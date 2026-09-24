@@ -4,6 +4,7 @@ import { useCart } from '../../context/CartContext';
 import { useWishlist } from '../../context/WishlistContext';
 import { getProductStockForSize, INITIAL_PRODUCTS } from '../../data/products';
 import { getColorHex } from '../../utils/colorUtils';
+import { getAssetUrl } from '../../utils/assetUrl';
 
 export const QuickViewModal = ({ product, isOpen, onClose, onOpenSizeGuide, onOpenCheckout }) => {
   const { addToCart, buyNow } = useCart();
@@ -157,7 +158,7 @@ export const QuickViewModal = ({ product, isOpen, onClose, onOpenSizeGuide, onOp
             }}>
               <img
                 key={activeImg}
-                src={activeImg}
+                src={getAssetUrl(activeImg)}
                 alt={`${product.name} - ${selectedColor}`}
                 style={{ width: '100%', height: '100%', objectFit: 'cover', animation: 'fadeIn 0.25s ease' }}
               />
@@ -209,7 +210,7 @@ export const QuickViewModal = ({ product, isOpen, onClose, onOpenSizeGuide, onOp
                       >
                         <div style={{ width: '48px', height: '48px', borderRadius: '4px', overflow: 'hidden', background: '#EAE4DC' }}>
                           <img
-                            src={thumbImg}
+                            src={getAssetUrl(thumbImg)}
                             alt={c}
                             style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                           />

@@ -21,6 +21,7 @@ import {
 import { db, auth } from '../firebase';
 import { INITIAL_PRODUCTS, createDefaultStockForSizes } from '../data/products';
 import { calculateCartDiscount } from '../utils/discountUtils';
+import { normalizeProduct, normalizeProducts, getAssetUrl } from '../utils/assetUrl';
 
 const DatabaseContext = createContext();
 
@@ -315,7 +316,7 @@ export const DatabaseProvider = ({ children }) => {
           snap.docs.forEach((d) => {
             const data = d.data();
             const id = String(data.id ?? d.id);
-            cloudMap.set(id, { ...data, id });
+            cloudMap.set(id, normalizeProduct({ ...data, id }));
           });
 
           const unifiedMap = new Map();
@@ -327,7 +328,7 @@ export const DatabaseProvider = ({ children }) => {
                 ? cloud.gallery
                 : (cloud.image ? [cloud.image] : null);
 
-              unifiedMap.set(String(base.id), {
+              const merged = normalizeProduct({
                 ...base,
                 ...cloud,
                 image: cloud.image || base.image,
@@ -335,29 +336,30 @@ export const DatabaseProvider = ({ children }) => {
                 colorImages: { ...(base.colorImages || {}), ...(cloud.colorImages || {}) },
                 id: base.id
               });
+              unifiedMap.set(String(base.id), merged);
             } else {
-              unifiedMap.set(String(base.id), { ...base });
+              unifiedMap.set(String(base.id), normalizeProduct({ ...base }));
             }
           });
 
           // 2. Append any newly added custom products from the cloud that aren't in INITIAL_PRODUCTS
           cloudMap.forEach((cloud, id) => {
             if (!unifiedMap.has(String(id))) {
-              unifiedMap.set(String(id), cloud);
+              unifiedMap.set(String(id), normalizeProduct(cloud));
             }
           });
 
-          const list = Array.from(unifiedMap.values());
+          const list = Array.from(unifiedMap.values()).map(normalizeProduct);
           list.sort((a, b) => (a.sortIndex ?? 0) - (b.sortIndex ?? 0));
           setProducts(list);
         } else {
-          setProducts(INITIAL_PRODUCTS);
+          setProducts(normalizeProducts(INITIAL_PRODUCTS));
         }
         setProductsLoaded(true);
       },
       (err) => {
         console.warn('Could not load products from Firestore, using initial catalog:', err);
-        setProducts(INITIAL_PRODUCTS);
+        setProducts(normalizeProducts(INITIAL_PRODUCTS));
       }
     );
     return unsub;
@@ -532,7 +534,7 @@ export const DatabaseProvider = ({ children }) => {
     const topIndex = products.length
       ? Math.min(...products.map((p) => p.sortIndex ?? 0)) - 1
       : 0;
-    const item = {
+    const item = normalizeProduct({
       ...newProduct,
       id: String(id),
       rating: newProduct.rating || 4.9,
@@ -541,7 +543,7 @@ export const DatabaseProvider = ({ children }) => {
       gallery: (newProduct.gallery && newProduct.gallery.length > 0) ? newProduct.gallery : [newProduct.image],
       sortIndex: topIndex,
       createdAt: Date.now()
-    };
+    });
     setProducts((prev) => [item, ...prev]);
     try {
       await setDoc(doc(db, 'products', String(id)), clean(item), { merge: true });
@@ -553,12 +555,12 @@ export const DatabaseProvider = ({ children }) => {
 
   const updateProduct = async (id, updatedFields) => {
     const existing = products.find((p) => p.id === id) || {};
-    const merged = {
+    const merged = normalizeProduct({
       ...existing,
       ...updatedFields,
       id: String(id),
       updatedAt: Date.now()
-    };
+    });
 
     // Immediately update local state on the current device
     setProducts((prev) =>

@@ -20,6 +20,7 @@ import {
   ArrowLeft
 } from 'lucide-react';
 import { STORE_INFO } from '../data/storeInfo';
+import { getAssetUrl } from '../utils/assetUrl';
 
 export const OrdersPage = () => {
   const navigate = useNavigate();
@@ -387,7 +388,7 @@ export const OrdersPage = () => {
                         <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
                           {item.image && (
                             <img
-                              src={item.image}
+                              src={getAssetUrl(item.image)}
                               alt={item.name}
                               style={{ width: '42px', height: '42px', borderRadius: '6px', objectFit: 'cover' }}
                             />

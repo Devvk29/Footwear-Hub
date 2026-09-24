@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { useDatabase } from '../../context/DatabaseContext';
 import { Package, Truck, Calendar, X, ShoppingBag, ArrowRight, FileText, Printer, CheckCircle2, Lock } from 'lucide-react';
+import { getAssetUrl } from '../../utils/assetUrl';
 
 export const MyOrdersModal = ({ isOpen, onClose, onBrowseCatalog, onViewInvoice }) => {
   const { user, isOwner, openAuthModal } = useAuth();
@@ -237,7 +238,7 @@ export const MyOrdersModal = ({ isOpen, onClose, onBrowseCatalog, onViewInvoice 
                     <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.8125rem' }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                         {item.image && (
-                          <img src={item.image} alt={item.name} style={{ width: '32px', height: '32px', borderRadius: '4px', objectFit: 'cover' }} />
+                          <img src={getAssetUrl(item.image)} alt={item.name} style={{ width: '32px', height: '32px', borderRadius: '4px', objectFit: 'cover' }} />
                         )}
                         <div>
                           <strong style={{ color: 'var(--text-primary)' }}>{item.name}</strong>

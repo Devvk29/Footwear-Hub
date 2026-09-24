@@ -5,6 +5,7 @@ import { useAuth } from '../../context/AuthContext';
 import { useDatabase } from '../../context/DatabaseContext';
 import { INITIAL_PRODUCTS } from '../../data/products';
 import { Heart, X, ShoppingBag, Trash2, ArrowLeft, Lock } from 'lucide-react';
+import { getAssetUrl } from '../../utils/assetUrl';
 
 export const WishlistModal = ({ isOpen, onClose, onQuickView }) => {
   const { isLoggedIn, user, openAuthModal } = useAuth();
@@ -164,7 +165,7 @@ export const WishlistModal = ({ isOpen, onClose, onQuickView }) => {
                     }}
                     style={{ width: '64px', height: '64px', borderRadius: 'var(--radius-sm)', overflow: 'hidden', background: '#EAE4DC', flexShrink: 0, cursor: 'pointer' }}
                   >
-                    <img src={p.image} alt={p.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                    <img src={getAssetUrl(p.image)} alt={p.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                   </div>
 
                   <div

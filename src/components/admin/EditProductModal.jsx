@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 import { CATEGORIES_LIST } from '../../data/products';
 import { getColorHex } from '../../utils/colorUtils';
+import { getAssetUrl } from '../../utils/assetUrl';
 
 // Fast client-side image compression to convert any mobile/desktop photo into a lightweight data URL
 const compressImageFile = (file, maxWidth = 900, quality = 0.72) => {
@@ -387,7 +388,7 @@ export const EditProductModal = ({ isOpen, product, onClose, onSave }) => {
                     flexWrap: 'wrap'
                   }}>
                     <div style={{ width: '80px', height: '80px', borderRadius: '8px', overflow: 'hidden', background: '#F3F4F6', flexShrink: 0, border: '1px solid #D1D5DB' }}>
-                      <img src={mainImage} alt="Main product preview" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                      <img src={getAssetUrl(mainImage)} alt="Main product preview" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                     </div>
 
                     <div style={{ flex: 1, minWidth: '180px' }}>
@@ -532,7 +533,7 @@ export const EditProductModal = ({ isOpen, product, onClose, onSave }) => {
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                       {hasImg && (
                         <div style={{ width: '34px', height: '34px', borderRadius: '4px', overflow: 'hidden', border: '1px solid #D1D5DB' }}>
-                          <img src={colorImages[cName]} alt={cName} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                          <img src={getAssetUrl(colorImages[cName])} alt={cName} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                         </div>
                       )}
 
@@ -830,7 +831,7 @@ export const EditProductModal = ({ isOpen, product, onClose, onSave }) => {
                     background: '#FFF'
                   }}
                 >
-                  <img src={gImg} alt={`gallery-${idx}`} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                  <img src={getAssetUrl(gImg)} alt={`gallery-${idx}`} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                   <button
                     type="button"
                     onClick={() => removeGalleryImage(idx)}
