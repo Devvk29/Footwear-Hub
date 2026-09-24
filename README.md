@@ -60,8 +60,8 @@ Official web storefront and digital ordering platform for **Kothari Footwear**, 
 
 ### 2. Clone the Repository
 ```bash
-git clone https://github.com/Devvk29/KF.git
-cd KF
+git clone https://github.com/Devvk29/Footwear-Hub.git
+cd Footwear-Hub
 ```
 
 ### 3. Install Dependencies
@@ -100,15 +100,15 @@ The optimized production build will be generated in the `dist/` directory.
 ### Option A: GitHub Pages (Automated via GitHub Actions)
 This repository includes a pre-configured GitHub Actions workflow in [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml).
 
-1. Push this repository to your GitHub account: `https://github.com/Devvk29/KF`
+1. Push this repository to your GitHub account: `https://github.com/Devvk29/Footwear-Hub`
 2. On GitHub, go to your repository **Settings** → **Pages**.
 3. Under **Build and deployment** > **Source**, choose **GitHub Actions**.
 4. The workflow will automatically build and publish your live website at:
-   `https://devvk29.github.io/KF/`
+   `https://devvk29.github.io/Footwear-Hub/`
 
 ### Option B: Vercel (1-Click Deployment - Recommended)
 1. Go to [Vercel](https://vercel.com) and log in with your GitHub account (`Devvk29`).
-2. Click **Add New** → **Project**, and select your `KF` repository.
+2. Click **Add New** → **Project**, and select your `Footwear-Hub` repository.
 3. Keep default settings (Framework Preset: `Vite`, Root Directory: `./`).
 4. Click **Deploy**. Your site will be live instantly with global CDN and automated SSL!
 
