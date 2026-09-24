@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://kothari-footwear.vercel.app/sitemap.xml

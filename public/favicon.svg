@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <!-- Background Luxury Gradient -->
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1F1C1A" />
+      <stop offset="50%" stop-color="#2D2723" />
+      <stop offset="100%" stop-color="#141211" />
+    </linearGradient>
+
+    <!-- Gold Foil Text Gradient -->
+    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFF3E0" />
+      <stop offset="35%" stop-color="#E5B989" />
+      <stop offset="70%" stop-color="#D4A373" />
+      <stop offset="100%" stop-color="#9E6C3B" />
+    </linearGradient>
+
+    <!-- Gold Border Gradient -->
+    <linearGradient id="borderGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#F7E2CE" />
+      <stop offset="100%" stop-color="#B07D48" />
+    </linearGradient>
+
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#000" flood-opacity="0.5" />
+    </filter>
+  </defs>
+
+  <!-- Base Rounded Crest Box -->
+  <rect x="2" y="2" width="60" height="60" rx="14" fill="url(#bgGrad)" stroke="url(#borderGrad)" stroke-width="2.5" />
+
+  <!-- Inner Subtle Stitching Line -->
+  <rect x="5.5" y="5.5" width="53" height="53" rx="11" fill="none" stroke="#D4A373" stroke-width="0.8" stroke-dasharray="2.5,2" opacity="0.6" />
+
+  <!-- Master Monogram 'KF' -->
+  <g filter="url(#shadow)">
+    <!-- Letter K -->
+    <path d="M16 19 L16 43 M16 31 L27 19 M21 27 L28 43" 
+          stroke="url(#goldGrad)" 
+          stroke-width="4.5" 
+          stroke-linecap="round" 
+          stroke-linejoin="round" />
+
+    <!-- Letter F -->
+    <path d="M34 19 L34 43 M34 19 L47 19 M34 30 L43 30" 
+          stroke="url(#goldGrad)" 
+          stroke-width="4.5" 
+          stroke-linecap="round" 
+          stroke-linejoin="round" />
+  </g>
+
+  <!-- Est 1998 Gold Bottom Accent Pill -->
+  <rect x="18" y="47" width="28" height="9" rx="4.5" fill="#D4A373" />
+  <text x="32" y="54" font-family="'Plus Jakarta Sans', 'Segoe UI', Arial, sans-serif" font-size="5.5" font-weight="900" fill="#1C1917" text-anchor="middle" letter-spacing="0.5">1998</text>
+</svg>

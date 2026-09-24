@@ -1,0 +1,110 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
+  <defs>
+    <linearGradient id="ogBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#141211" />
+      <stop offset="50%" stop-color="#24201D" />
+      <stop offset="100%" stop-color="#12100F" />
+    </linearGradient>
+
+    <linearGradient id="ogGold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFF5E6" />
+      <stop offset="30%" stop-color="#F3D1A5" />
+      <stop offset="70%" stop-color="#D4A373" />
+      <stop offset="100%" stop-color="#9C6B3A" />
+    </linearGradient>
+
+    <linearGradient id="crestBorder" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FDE8D3" />
+      <stop offset="100%" stop-color="#A87440" />
+    </linearGradient>
+
+    <radialGradient id="glow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#D4A373" stop-opacity="0.18" />
+      <stop offset="100%" stop-color="#D4A373" stop-opacity="0" />
+    </radialGradient>
+
+    <filter id="cardShadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="10" stdDeviation="15" flood-color="#000" flood-opacity="0.6" />
+    </filter>
+  </defs>
+
+  <!-- Background Base -->
+  <rect width="1200" height="630" fill="url(#ogBg)" />
+
+  <!-- Ambient Glow Behind Logo -->
+  <circle cx="600" cy="230" r="300" fill="url(#glow)" />
+
+  <!-- Outer Frame Border with Corner Accents -->
+  <rect x="30" y="30" width="1140" height="570" rx="20" fill="none" stroke="#D4A373" stroke-width="2" opacity="0.4" />
+  <rect x="42" y="42" width="1116" height="546" rx="16" fill="none" stroke="#D4A373" stroke-width="1" stroke-dasharray="8,6" opacity="0.25" />
+
+  <!-- Luxury Monogram Crest Box (Center Top) -->
+  <g filter="url(#cardShadow)">
+    <rect x="510" y="90" width="180" height="180" rx="36" fill="#1C1917" stroke="url(#crestBorder)" stroke-width="4.5" />
+    <rect x="522" y="102" width="156" height="156" rx="28" fill="none" stroke="#D4A373" stroke-width="1.5" stroke-dasharray="6,4" opacity="0.5" />
+    
+    <!-- Large Vector Monogram 'KF' -->
+    <!-- K -->
+    <path d="M552 140 L552 215 M552 178 L586 140 M568 168 L588 215" 
+          stroke="url(#ogGold)" 
+          stroke-width="10" 
+          stroke-linecap="round" 
+          stroke-linejoin="round" />
+    <!-- F -->
+    <path d="M608 140 L608 215 M608 140 L646 140 M608 175 L636 175" 
+          stroke="url(#ogGold)" 
+          stroke-width="10" 
+          stroke-linecap="round" 
+          stroke-linejoin="round" />
+  </g>
+
+  <!-- Main Brand Title -->
+  <text x="600" y="340" 
+        font-family="'Outfit', 'Plus Jakarta Sans', 'Segoe UI', Arial, sans-serif" 
+        font-size="44" 
+        font-weight="900" 
+        letter-spacing="6" 
+        fill="url(#ogGold)" 
+        text-anchor="middle">
+    KOTHARI FOOTWEAR
+  </text>
+
+  <!-- Established Year Badge & Town -->
+  <g transform="translate(485, 362)">
+    <rect x="0" y="0" width="230" height="32" rx="16" fill="#385942" stroke="#4D7A5B" stroke-width="1.5" />
+    <text x="115" y="21" font-family="'Plus Jakarta Sans', sans-serif" font-size="14" font-weight="800" fill="#FFF" text-anchor="middle" letter-spacing="1">
+      ★ EST. 1998 • IDAR, GUJARAT ★
+    </text>
+  </g>
+
+  <!-- Subtitle Tagline -->
+  <text x="600" y="440" 
+        font-family="'Plus Jakarta Sans', sans-serif" 
+        font-size="22" 
+        font-weight="600" 
+        fill="#E0DDD7" 
+        text-anchor="middle">
+    Master Indian Shoemaking • Handcrafted Leather, Doctor Ortho & Festive Mojaris
+  </text>
+
+  <!-- Bottom Features Bar -->
+  <g transform="translate(180, 485)">
+    <!-- Feature 1 -->
+    <rect x="0" y="0" width="260" height="50" rx="10" fill="#24201D" stroke="#3D352E" stroke-width="1.5" />
+    <text x="130" y="31" font-family="'Plus Jakarta Sans', sans-serif" font-size="14" font-weight="700" fill="#D4A373" text-anchor="middle">
+      👞 Men & Women (IND 3 - 12)
+    </text>
+
+    <!-- Feature 2 -->
+    <rect x="290" y="0" width="260" height="50" rx="10" fill="#24201D" stroke="#3D352E" stroke-width="1.5" />
+    <text x="420" y="31" font-family="'Plus Jakarta Sans', sans-serif" font-size="14" font-weight="700" fill="#FFF" text-anchor="middle">
+      ₹599 – ₹3,000 Official Store
+    </text>
+
+    <!-- Feature 3 -->
+    <rect x="580" y="0" width="260" height="50" rx="10" fill="#24201D" stroke="#3D352E" stroke-width="1.5" />
+    <text x="710" y="31" font-family="'Plus Jakarta Sans', sans-serif" font-size="14" font-weight="700" fill="#88B090" text-anchor="middle">
+      🚀 Express Doorstep Delivery
+    </text>
+  </g>
+</svg>

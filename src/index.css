@@ -1,0 +1,815 @@
+/* KOTHARI FOOTWEAR - Professional Responsive Design System */
+
+:root {
+  /* Earthy, Eco-Friendly, Modern Luxury Palette */
+  --bg-primary: #F8F6F1;
+  --bg-secondary: #FFFFFF;
+  --bg-tertiary: #F1ECE3;
+  --bg-card: #FFFFFF;
+  --bg-dark: #191817;
+  --bg-dark-surface: #262422;
+
+  /* Typography Colors */
+  --text-primary: #1D1A17;
+  --text-secondary: #57524C;
+  --text-muted: #8E877F;
+  --text-inverse: #F8F6F1;
+
+  /* Accents */
+  --accent-sage: #385942;
+  --accent-sage-light: #E7EFE9;
+  --accent-sage-hover: #2D4734;
+  --accent-tan: #A06C3E;
+  --accent-tan-light: #F6EDE4;
+  --accent-charcoal: #2A2724;
+
+  /* UI Borders & Shadows */
+  --border-subtle: #E6E0D6;
+  --border-medium: #D5CDBF;
+  --border-focus: #385942;
+
+  --shadow-sm: 0 1px 2px rgba(29, 26, 23, 0.04);
+  --shadow-md: 0 4px 12px rgba(29, 26, 23, 0.06);
+  --shadow-lg: 0 10px 30px rgba(29, 26, 23, 0.08);
+  --shadow-xl: 0 20px 40px rgba(29, 26, 23, 0.12);
+
+  /* Radius */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-full: 9999px;
+
+  /* Font Families */
+  --font-heading: 'Outfit', sans-serif;
+  --font-body: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+
+  /* Transitions */
+  --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-normal: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-smooth: 400ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html, body {
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: hidden;
+  position: relative;
+}
+
+body {
+  font-family: var(--font-body);
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  color: var(--text-primary);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-primary);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border-medium);
+  border-radius: var(--radius-full);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
+}
+
+/* Universal Mobile Horizontal Sliding Utilities */
+.mobile-slide-strip,
+.mobile-scroll-x,
+.mobile-table-scroll {
+  display: flex;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.mobile-slide-strip::-webkit-scrollbar,
+.mobile-scroll-x::-webkit-scrollbar,
+.mobile-table-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+/* Container */
+.container-custom {
+  width: 100%;
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 0 0.85rem;
+}
+
+@media (min-width: 768px) {
+  .container-custom {
+    padding: 0 1.5rem;
+  }
+}
+
+@media (min-width: 1200px) {
+  .container-custom {
+    padding: 0 2rem;
+  }
+}
+
+/* 2-Column Desktop Grid Layout - 100% Solid Responsive */
+.shop-main-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  width: 100%;
+}
+
+@media (min-width: 992px) {
+  .shop-main-layout {
+    display: grid;
+    grid-template-columns: 270px 1fr;
+    gap: 2rem;
+    align-items: start;
+  }
+  .mobile-filter-trigger {
+    display: none !important;
+  }
+}
+
+@media (max-width: 991px) {
+  .catalog-sidebar-desktop {
+    display: none !important;
+  }
+  .mobile-filter-trigger {
+    display: flex !important;
+  }
+}
+
+/* Button Component Tokens */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 600;
+  font-size: 0.875rem;
+  border-radius: var(--radius-md);
+  padding: 0.65rem 1.25rem;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  border: 1px solid transparent;
+  font-family: inherit;
+  justify-content: center;
+  text-decoration: none;
+  line-height: 1;
+}
+
+.btn-primary {
+  background-color: var(--accent-charcoal);
+  color: #FFFFFF;
+}
+.btn-primary:hover {
+  background-color: #1A1816;
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+.btn-secondary {
+  background-color: var(--bg-secondary);
+  color: var(--text-primary);
+  border-color: var(--border-medium);
+}
+.btn-secondary:hover {
+  background-color: var(--bg-tertiary);
+  border-color: var(--text-muted);
+}
+
+.btn-sage {
+  background-color: var(--accent-sage);
+  color: #FFFFFF;
+}
+.btn-sage:hover {
+  background-color: var(--accent-sage-hover);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+.btn-tan {
+  background-color: var(--accent-tan);
+  color: #FFFFFF;
+}
+.btn-tan:hover {
+  background-color: #8C5824;
+  transform: translateY(-1px);
+}
+
+.btn-outline {
+  background: transparent;
+  border-color: var(--border-medium);
+  color: var(--text-primary);
+}
+.btn-outline:hover {
+  background: var(--bg-tertiary);
+}
+
+/* Badges */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 0.25rem 0.65rem;
+  border-radius: var(--radius-full);
+  letter-spacing: 0.02em;
+}
+
+.badge-sage {
+  background-color: var(--accent-sage-light);
+  color: var(--accent-sage);
+}
+
+.badge-tan {
+  background-color: var(--accent-tan-light);
+  color: var(--accent-tan);
+}
+
+.badge-charcoal {
+  background-color: var(--accent-charcoal);
+  color: #FFFFFF;
+}
+
+.badge-eco {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 0.2rem 0.6rem;
+  border-radius: var(--radius-full);
+  background-color: rgba(56, 89, 66, 0.12);
+  color: var(--accent-sage);
+  border: 1px solid rgba(56, 89, 66, 0.25);
+}
+
+/* Modals */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(29, 26, 23, 0.65);
+  backdrop-filter: blur(8px);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem;
+  animation: fadeIn 0.2s ease-out;
+  overflow-y: auto;
+}
+
+.modal-card {
+  background: var(--bg-secondary);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-xl);
+  border: 1px solid var(--border-subtle);
+  animation: scaleUp 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  max-width: 100%;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes scaleUp {
+  from { opacity: 0; transform: scale(0.96) translateY(10px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes drawerSlideLeft {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(0); }
+}
+
+/* =========================================================
+   ULTRA-SMOOTH MINIMALIST SLIDEBAR & PRODUCTS GRID ENGINE
+   ========================================================= */
+.products-grid-container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.75rem;
+}
+
+@media (min-width: 640px) {
+  .products-grid-container {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.25rem;
+  }
+}
+
+@media (min-width: 900px) {
+  .products-grid-container {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.25rem;
+  }
+}
+
+@media (min-width: 1200px) {
+  .products-grid-container {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem;
+  }
+}
+
+/* Ultra Smooth Horizontal 2-Card Slidebar Shelf */
+.shoes-slidebar-shelf {
+  display: flex;
+  gap: 0.75rem;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  padding: 0.35rem 0.15rem 0.85rem;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(212, 163, 115, 0.4) transparent;
+}
+
+.shoes-slidebar-shelf::-webkit-scrollbar {
+  height: 4px;
+}
+
+.shoes-slidebar-shelf::-webkit-scrollbar-thumb {
+  background: rgba(212, 163, 115, 0.4);
+  border-radius: 4px;
+}
+
+.shoes-slidebar-item {
+  flex: 0 0 calc(50% - 0.4rem);
+  min-width: 145px;
+  max-width: 290px;
+}
+
+@media (min-width: 640px) {
+  .shoes-slidebar-item {
+    flex: 0 0 240px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .shoes-slidebar-item {
+    flex: 0 0 270px;
+  }
+}
+
+/* Shoe Card Styling with Mirror Lens Inspection */
+.shoe-card {
+  position: relative;
+  background: var(--bg-card);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-subtle);
+  overflow: hidden;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  flex-direction: column;
+}
+
+.shoe-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 25px rgba(29, 26, 23, 0.08);
+  border-color: var(--border-medium);
+}
+
+.shoe-image-wrap {
+  position: relative;
+  width: 100%;
+  padding-top: 85%;
+  background-color: #F3EFE9;
+  overflow: hidden;
+}
+
+.shoe-mirror-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(25, 24, 23, 0.25);
+  backdrop-filter: blur(2px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+  pointer-events: none;
+}
+
+.shoe-card:hover .shoe-mirror-overlay {
+  opacity: 1;
+}
+
+.shoe-mirror-btn {
+  background: rgba(255, 255, 255, 0.95);
+  color: var(--accent-charcoal);
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.45rem 0.85rem;
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+  transform: translateY(6px);
+  transition: transform 0.25s ease;
+}
+
+.shoe-card:hover .shoe-mirror-btn {
+  transform: translateY(0);
+}
+
+.shoe-wishlist-btn {
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--text-primary);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease;
+}
+
+.shoe-wishlist-btn:hover {
+  transform: scale(1.1);
+  color: #E11D48;
+}
+
+.badge-eco-pill {
+  background: rgba(255, 255, 255, 0.92);
+  color: var(--accent-sage);
+  border: 1px solid rgba(56, 89, 66, 0.2);
+  font-size: 0.65rem;
+  font-weight: 800;
+  padding: 2px 7px;
+  border-radius: var(--radius-full);
+  backdrop-filter: blur(4px);
+}
+
+/* Quick View 2-Col / 1-Col Layout */
+.quick-view-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 768px) {
+  .quick-view-grid {
+    grid-template-columns: 1fr 1.15fr;
+  }
+}
+
+/* Mobile Responsiveness Fine-Tuning & Advanced Sliding Rules */
+@media (max-width: 768px) {
+  .hero-grid {
+    grid-template-columns: 1fr !important;
+    gap: 1.5rem !important;
+  }
+  .desktop-nav {
+    display: none !important;
+  }
+  .mobile-bottom-nav {
+    display: flex !important;
+  }
+  .shoe-mirror-overlay {
+    display: none !important;
+  }
+  .hide-on-small-mobile {
+    display: none !important;
+  }
+  .modal-card {
+    border-radius: 14px !important;
+    padding: 1rem !important;
+  }
+  .admin-dashboard-card {
+    height: 98vh !important;
+    border-radius: 12px !important;
+  }
+  .navbar-search-box {
+    max-width: 140px;
+  }
+  .navbar-brand-text p {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .navbar-search-box {
+    max-width: 110px;
+  }
+  .products-grid-container {
+    gap: 0.5rem;
+  }
+  .shoes-slidebar-item {
+    flex: 0 0 calc(50% - 0.25rem);
+    min-width: 135px;
+  }
+}
+
+/* =========================================================
+   INVOICE MODAL — MOBILE RESPONSIVE
+   ========================================================= */
+
+/* Invoice modal container: full width on small screens */
+.invoice-modal-container {
+  width: 100%;
+}
+
+@media (max-width: 640px) {
+  .invoice-modal-container {
+    max-width: calc(100vw - 0.75rem) !important;
+    padding: 0.75rem !important;
+    margin: 0 auto;
+  }
+
+  /* Modal overlay tighter padding on mobile */
+  .modal-overlay {
+    padding: 0.35rem;
+  }
+
+  /* Invoice action buttons: stack to single column */
+  .invoice-action-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Invoice header: stack vertically */
+  .invoice-header-row {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  /* Address grid: single column */
+  .invoice-address-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Remove right border on address divider */
+  .invoice-store-col {
+    border-right: none !important;
+    border-bottom: 1px solid #E5DFD5;
+    padding-bottom: 0.75rem;
+    margin-bottom: 0.5rem;
+    padding-right: 0 !important;
+  }
+
+  /* Allow invoice paper to scroll horizontally if needed */
+  .invoice-paper-wrap {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Invoice items table scrollable on narrow screens */
+  .invoice-table-scroll {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    min-width: 0;
+  }
+
+  .invoice-table-scroll table {
+    min-width: 400px;
+  }
+
+  /* Total calculation: full width */
+  .invoice-total-col {
+    width: 100% !important;
+  }
+
+  /* Signature / stamp section: center on mobile */
+  .invoice-footer-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .invoice-signature-group {
+    margin-left: 0 !important;
+    justify-content: center;
+    width: 100%;
+  }
+}
+
+/* Horizontal swipe hint for any table on mobile */
+@media (max-width: 768px) {
+  .mobile-only-slide-hint {
+    display: flex !important;
+  }
+
+  .table-responsive,
+  .invoice-table-scroll {
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    scrollbar-width: thin;
+    max-width: 100%;
+  }
+
+  /* Prevent modal cards from overflowing viewport */
+  .modal-card {
+    max-width: calc(100vw - 0.75rem);
+  }
+
+  /* Quick view grid single column on mobile already, ensure image not cut */
+  .quick-view-grid {
+    gap: 0;
+  }
+}
+
+/* =========================================================
+   ZOOM-OUT & ADMIN PANEL COMPATIBILITY
+   ========================================================= */
+
+/* Ensure nothing clips when browser is zoomed out */
+html {
+  min-width: 320px;
+}
+
+/* Admin Dashboard: always scrollable, never clips */
+.admin-dashboard-card {
+  min-width: 320px !important;
+  overflow: hidden !important;
+}
+
+/* Admin product row wraps on small/zoomed screens */
+.admin-product-row {
+  flex-wrap: wrap !important;
+}
+
+/* Admin header title: visible at any zoom level */
+.admin-dashboard-card h3 {
+  word-break: keep-all;
+  overflow-wrap: normal;
+}
+
+/* Edit Product Modal: always scrollable on mobile */
+.edit-product-modal-card {
+  min-width: 300px !important;
+}
+
+/* Product image previews in admin: always cropped/cover */
+.admin-product-img,
+.admin-product-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover !important;
+  display: block;
+}
+
+/* Image preview in EditProductModal: crisp cover crop */
+#main-image-preview {
+  object-fit: cover !important;
+  width: 100% !important;
+  height: 100% !important;
+  display: block;
+}
+
+/* Scrollable analytics strip on mobile */
+@media (max-width: 640px) {
+  /* Admin stats cards: allow horizontal scroll */
+  .admin-stats-strip {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Admin tab bar: scrollable */
+  .admin-tab-bar {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    flex-wrap: nowrap !important;
+  }
+
+  /* Make sure admin content is scrollable and visible */
+  .admin-dashboard-card {
+    height: 98dvh !important;
+    max-height: 98dvh !important;
+  }
+
+  /* Edit product modal full screen on mobile */
+  .edit-product-modal-card {
+    max-height: 95dvh !important;
+    border-radius: 12px !important;
+  }
+}
+
+/* =========================================================
+   MOBILE CUSTOMER CARDS & ADMIN DASHBOARD RESPONSIVENESS
+   ========================================================= */
+
+.mobile-customer-cards {
+  display: none;
+}
+.desktop-customer-table {
+  display: block;
+}
+
+@media (max-width: 768px) {
+  .desktop-customer-table {
+    display: none !important;
+  }
+  .mobile-customer-cards {
+    display: flex !important;
+    flex-direction: column;
+    gap: 0.85rem;
+  }
+
+  /* Admin Dashboard Card on Mobile: whole card scrolls smoothly and moveably */
+  .admin-dashboard-card {
+    height: 96vh !important;
+    max-height: 96vh !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+
+  /* Make KPI analytics cards compact single horizontal swipe row so it takes minimal vertical height (~55px) */
+  .admin-stats-strip {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    gap: 0.5rem !important;
+    padding: 0.5rem 0.75rem !important;
+    scrollbar-width: none !important;
+  }
+  .admin-stats-strip::-webkit-scrollbar {
+    display: none !important;
+  }
+  .admin-stats-strip > div {
+    min-width: 125px !important;
+    max-width: 140px !important;
+    flex: 0 0 auto !important;
+    padding: 0.45rem 0.65rem !important;
+    border-radius: 8px !important;
+  }
+  .admin-stats-strip > div p {
+    font-size: 1rem !important;
+    margin: 2px 0 0 !important;
+  }
+  .admin-stats-strip > div span {
+    font-size: 0.62rem !important;
+  }
+
+  /* Sticky Tab Bar on mobile so user can switch tabs while scrolling content */
+  .admin-tab-bar {
+    position: sticky !important;
+    top: 0 !important;
+    z-index: 30 !important;
+    background: #FFFFFF !important;
+    padding: 0.35rem 0.5rem !important;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06) !important;
+    gap: 0.35rem !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+  .admin-tab-bar button {
+    padding: 0.35rem 0.6rem !important;
+    font-size: 0.72rem !important;
+    border-radius: 6px !important;
+  }
+
+  /* Body content inside admin card */
+  .admin-tab-body {
+    padding: 0.75rem !important;
+    overflow-y: visible !important;
+  }
+
+  /* Advance Stock Matrix Size Grid on Mobile: fits all sizes cleanly without cutoffs */
+  .admin-stock-size-grid {
+    grid-template-columns: repeat(auto-fill, minmax(68px, 1fr)) !important;
+    gap: 0.35rem !important;
+  }
+  .admin-stock-size-grid > div {
+    padding: 0.35rem !important;
+  }
+  .admin-stock-card {
+    padding: 0.75rem !important;
+  }
+  .admin-order-card {
+    padding: 0.75rem !important;
+  }
+}
+
