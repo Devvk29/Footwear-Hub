@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useRef, useEffect } from 'react';
-import { useNavigate, useLocation, Link } from 'react-router-dom';
+import { useNavigate, useLocation, Link, NavLink } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { useCart } from '../../context/CartContext';
 import { useWishlist } from '../../context/WishlistContext';
@@ -209,71 +209,63 @@ export const Navbar = ({
 
         {/* Center Navigation Links (Desktop) */}
         <nav style={{ display: 'none', alignItems: 'center', gap: '0.4rem' }} className="desktop-nav">
-          <button
-            type="button"
-            onClick={() => {
-              navigate('/');
-              if (onSelectGender) onSelectGender('All');
-            }}
-            style={{
-              background: (location.pathname === '/' && activeGender === 'All') ? 'var(--accent-charcoal)' : 'transparent',
-              border: 'none',
+          <NavLink
+            to="/"
+            end
+            style={({ isActive }) => ({
+              background: isActive ? 'var(--accent-charcoal)' : 'transparent',
+              textDecoration: 'none',
+              display: 'inline-flex',
+              alignItems: 'center',
               padding: '0.45rem 1rem',
               borderRadius: '999px',
               fontSize: '0.875rem',
-              fontWeight: (location.pathname === '/' && activeGender === 'All') ? 700 : 500,
-              color: (location.pathname === '/' && activeGender === 'All') ? '#FFFFFF' : 'var(--text-secondary)',
-              cursor: 'pointer',
+              fontWeight: isActive ? 700 : 500,
+              color: isActive ? '#FFFFFF' : 'var(--text-secondary)',
               transition: 'all 0.18s ease',
-              boxShadow: (location.pathname === '/' && activeGender === 'All') ? '0 2px 8px rgba(0,0,0,0.18)' : 'none'
-            }}
+              boxShadow: isActive ? '0 2px 8px rgba(0,0,0,0.18)' : 'none'
+            })}
           >
             All Footwear
-          </button>
+          </NavLink>
 
-          <button
-            type="button"
-            onClick={() => {
-              navigate('/mens-wear');
-              if (onSelectGender) onSelectGender('Men');
-            }}
-            style={{
-              background: (location.pathname === '/mens-wear' || (location.pathname === '/' && activeGender === 'Men')) ? 'var(--accent-charcoal)' : 'transparent',
-              border: 'none',
+          <NavLink
+            to="/mens-wear"
+            style={({ isActive }) => ({
+              background: isActive ? 'var(--accent-charcoal)' : 'transparent',
+              textDecoration: 'none',
+              display: 'inline-flex',
+              alignItems: 'center',
               padding: '0.45rem 1rem',
               borderRadius: '999px',
               fontSize: '0.875rem',
-              fontWeight: (location.pathname === '/mens-wear' || (location.pathname === '/' && activeGender === 'Men')) ? 700 : 500,
-              color: (location.pathname === '/mens-wear' || (location.pathname === '/' && activeGender === 'Men')) ? '#FFFFFF' : 'var(--text-secondary)',
-              cursor: 'pointer',
+              fontWeight: isActive ? 700 : 500,
+              color: isActive ? '#FFFFFF' : 'var(--text-secondary)',
               transition: 'all 0.18s ease',
-              boxShadow: (location.pathname === '/mens-wear' || (location.pathname === '/' && activeGender === 'Men')) ? '0 2px 8px rgba(0,0,0,0.18)' : 'none'
-            }}
+              boxShadow: isActive ? '0 2px 8px rgba(0,0,0,0.18)' : 'none'
+            })}
           >
-            Men's Wear <span style={{ fontSize: '0.7rem', opacity: 0.7 }}>(IND 6-12)</span>
-          </button>
+            Men's Wear <span style={{ fontSize: '0.7rem', opacity: 0.7, marginLeft: '4px' }}>(IND 6-12)</span>
+          </NavLink>
 
-          <button
-            type="button"
-            onClick={() => {
-              navigate('/womens-wear');
-              if (onSelectGender) onSelectGender('Women');
-            }}
-            style={{
-              background: (location.pathname === '/womens-wear' || (location.pathname === '/' && activeGender === 'Women')) ? 'var(--accent-charcoal)' : 'transparent',
-              border: 'none',
+          <NavLink
+            to="/womens-wear"
+            style={({ isActive }) => ({
+              background: isActive ? 'var(--accent-charcoal)' : 'transparent',
+              textDecoration: 'none',
+              display: 'inline-flex',
+              alignItems: 'center',
               padding: '0.45rem 1rem',
               borderRadius: '999px',
               fontSize: '0.875rem',
-              fontWeight: (location.pathname === '/womens-wear' || (location.pathname === '/' && activeGender === 'Women')) ? 700 : 500,
-              color: (location.pathname === '/womens-wear' || (location.pathname === '/' && activeGender === 'Women')) ? '#FFFFFF' : 'var(--text-secondary)',
-              cursor: 'pointer',
+              fontWeight: isActive ? 700 : 500,
+              color: isActive ? '#FFFFFF' : 'var(--text-secondary)',
               transition: 'all 0.18s ease',
-              boxShadow: (location.pathname === '/womens-wear' || (location.pathname === '/' && activeGender === 'Women')) ? '0 2px 8px rgba(0,0,0,0.18)' : 'none'
-            }}
+              boxShadow: isActive ? '0 2px 8px rgba(0,0,0,0.18)' : 'none'
+            })}
           >
-            Women's Wear <span style={{ fontSize: '0.7rem', opacity: 0.7 }}>(IND 3-9)</span>
-          </button>
+            Women's Wear <span style={{ fontSize: '0.7rem', opacity: 0.7, marginLeft: '4px' }}>(IND 3-9)</span>
+          </NavLink>
         </nav>
 
         {/* Right Search, Actions & Slideable Action Strip */}
@@ -448,8 +440,8 @@ export const Navbar = ({
             }}
             title="Saved Wishlist"
           >
-            <Heart size={17} style={{ color: wishlistCount > 0 ? '#E11D48' : 'var(--text-primary)' }} fill={wishlistCount > 0 ? '#E11D48' : 'none'} />
-            {wishlistCount > 0 && (
+            <Heart size={17} style={{ color: (isLoggedIn && wishlistCount > 0) ? '#E11D48' : 'var(--text-primary)' }} fill={(isLoggedIn && wishlistCount > 0) ? '#E11D48' : 'none'} />
+            {isLoggedIn && wishlistCount > 0 && (
               <span style={{
                 position: 'absolute',
                 top: '-4px',

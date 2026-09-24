@@ -27,6 +27,7 @@ export const CartDrawer = ({ onOpenCheckout, onOpenSizeGuide, onOpenSampleInvoic
     multiPairDiscountPercent,
     multiPairDiscount,
     nextTierMessage,
+    hintMessage,
     suggestedCoupon,
     couponDiscount,
     shippingFee,
@@ -158,13 +159,13 @@ export const CartDrawer = ({ onOpenCheckout, onOpenSizeGuide, onOpenSampleInvoic
         {/* Multi-Pair Tiered Savings Offer Banner */}
         <div style={{
           padding: '0.65rem 1.25rem',
-          background: totalCount >= 3 ? '#FEF3C7' : totalCount >= 1 ? '#E7EFE9' : '#FAF8F5',
+          background: totalCount >= 3 ? '#FEF3C7' : totalCount === 2 ? '#E7EFE9' : totalCount === 1 ? '#FFFBEB' : '#FAF8F5',
           borderBottom: '1px solid var(--border-subtle)',
           fontSize: '0.8125rem'
         }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.4rem', fontWeight: 700 }}>
-            <span style={{ color: totalCount >= 3 ? '#92400E' : totalCount >= 2 ? 'var(--accent-sage)' : 'var(--text-secondary)' }}>
-              {totalCount === 0 ? "🎁 Add 2+ pairs to unlock 10% - 15% Instant Multi-Pair OFF!" : nextTierMessage}
+            <span style={{ color: totalCount >= 3 ? '#92400E' : totalCount === 2 ? 'var(--accent-sage)' : totalCount === 1 ? '#B45309' : 'var(--text-secondary)' }}>
+              {totalCount === 1 ? `🎁 ${hintMessage || "Add 1 more pair to get 10% OFF"}` : (totalCount === 0 ? "🎁 Add 2+ pairs to unlock 10% - 15% Instant Multi-Pair OFF!" : nextTierMessage)}
             </span>
             {multiPairDiscountPercent > 0 && (
               <span style={{ background: 'var(--accent-charcoal)', color: '#FFF', fontSize: '0.65rem', padding: '2px 7px', borderRadius: '4px' }}>

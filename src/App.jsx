@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom';
 import { DatabaseProvider, useDatabase } from './context/DatabaseContext';
 import { AuthProvider, useAuth } from './context/AuthContext';
-import { CartProvider } from './context/CartContext';
+import { CartProvider, useCart } from './context/CartContext';
 import { WishlistProvider } from './context/WishlistContext';
 
 import { AnnouncementBar } from './components/layout/AnnouncementBar';
@@ -36,6 +36,7 @@ function ShopApp() {
   const location = useLocation();
   const { isOwner } = useAuth();
   const { allOrders } = useDatabase();
+  const { setIsCartOpen } = useCart();
 
   // Active filters and query
   const [activeGender, setActiveGender] = useState('All');
@@ -52,6 +53,21 @@ function ShopApp() {
   const [isWishlistOpen, setIsWishlistOpen] = useState(false);
   const [isAdminOpen, setIsAdminOpen] = useState(false);
   const [toasts, setToasts] = useState([]);
+
+  // Close all modals, drawers, and quickview on any route navigation, and scroll to top
+  useEffect(() => {
+    setQuickViewProduct(null);
+    setIsCheckoutOpen(false);
+    setIsOrdersOpen(false);
+    setIsWishlistOpen(false);
+    setIsStoryOpen(false);
+    setSizeGuideState({ isOpen: false, gender: 'Men' });
+    setIsSizeAdvisorOpen(false);
+    setIsAdminOpen(false);
+    setOrderSuccessData(null);
+    setIsCartOpen(false);
+    window.scrollTo(0, 0);
+  }, [location.pathname, setIsCartOpen]);
 
   // Sync activeGender with current URL route
   useEffect(() => {

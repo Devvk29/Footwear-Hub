@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useAuth } from './AuthContext';
+import { calculateCartDiscount } from '../utils/discountUtils';
 
 const CartContext = createContext();
 
@@ -47,11 +48,21 @@ export const CartProvider = ({ children }) => {
     }
   }, [items, user]);
 
+  const activeItems = user ? items : [];
+  const currentTotalPairs = activeItems.reduce((sum, item) => sum + (Number(item?.quantity) || 1), 0);
+
+  // If a coupon was applied and total quantity drops below 2, automatically remove coupon
+  useEffect(() => {
+    if (appliedCoupon && currentTotalPairs < 2) {
+      setAppliedCoupon(null);
+      setCouponError('Add 1 more pair to unlock the discount');
+    }
+  }, [currentTotalPairs, appliedCoupon]);
+
   // Add to cart with Indian size & color selection
   const addToCart = (product, selectedSize, selectedColor = null, quantity = 1, onAddedCallback = null) => {
     if (!isLoggedIn) {
-      openAuthModal('cart', (loggedInUser) => {
-        // Execute add to cart after successful login
+      openAuthModal('cart', () => {
         performAddToCart(product, selectedSize, selectedColor, quantity);
         setIsCartOpen(true);
         if (onAddedCallback) onAddedCallback();
@@ -120,11 +131,10 @@ export const CartProvider = ({ children }) => {
     setItems(prev => prev.filter(i => i.cartItemId !== cartItemId));
   };
 
-  const activeItems = user ? items : [];
-
   const clearCart = () => {
     setItems([]);
     setAppliedCoupon(null);
+    setCouponError('');
     if (user) {
       const userKey = `kf_cart_${user.id || user.phone || 'guest'}`;
       localStorage.removeItem(userKey);
@@ -132,8 +142,14 @@ export const CartProvider = ({ children }) => {
   };
 
   const applyCoupon = (code) => {
-    const clean = code.trim().toUpperCase();
+    const clean = (code || '').trim().toUpperCase();
     setCouponError('');
+
+    if (currentTotalPairs < 2) {
+      setCouponError('Add 1 more pair to unlock the discount (Coupons require 2 or more pairs)');
+      return false;
+    }
+
     if (clean === 'HERITAGE10' || clean === 'KOTHARI10') {
       setAppliedCoupon({ code: clean, discountPercent: 10, label: '10% Artisanal Savings' });
       return true;
@@ -160,70 +176,40 @@ export const CartProvider = ({ children }) => {
     setCouponError('');
   };
 
-  const totalCount = activeItems.reduce((sum, item) => sum + item.quantity, 0);
-  const subtotal = activeItems.reduce((sum, item) => sum + ((item.product?.price || 599) * item.quantity), 0);
-  const totalMrp = activeItems.reduce((sum, item) => sum + ((item.product?.originalPrice || item.product?.price || 599) * item.quantity), 0);
-  const mrpSavings = Math.max(0, totalMrp - subtotal);
+  // Central Single Source of Truth calculation
+  const discountCalc = calculateCartDiscount(activeItems, appliedCoupon);
 
-  // Multi-Pair Tiered Savings (Buy 2: 10% Instant OFF, Buy 3+: 15% Instant OFF)
-  let multiPairDiscountPercent = 0;
-  let nextTierMessage = "";
-  if (totalCount >= 3) {
-    multiPairDiscountPercent = 15;
-    nextTierMessage = "🔥 15% Multi-Pair Discount Applied! (Buy 3+ Get 15% OFF)";
-  } else if (totalCount === 2) {
-    multiPairDiscountPercent = 10;
-    nextTierMessage = "🎉 10% Instant Discount Applied! Add 1 more pair to unlock 15% OFF!";
-  } else if (totalCount === 1) {
-    multiPairDiscountPercent = 0;
-    nextTierMessage = "🎁 Add 1 more pair to unlock 10% INSTANT OFF (Buy 2: 10%, Buy 3+: 15%)!";
-  }
-
-  const multiPairDiscount = Math.round((subtotal * multiPairDiscountPercent) / 100);
-
-  // Auto-Generated Coupon based on satisfaction of purchase criteria
+  // Suggested coupon based on purchase criteria (only suggest if >= 2 pairs)
   let suggestedCoupon = null;
-  if (totalCount >= 3) {
+  if (discountCalc.totalCount >= 3) {
     suggestedCoupon = { code: 'FESTIVE15', label: '15% Multi-Pair Discount', discountPercent: 15 };
-  } else if (totalCount === 2) {
+  } else if (discountCalc.totalCount === 2) {
     suggestedCoupon = { code: 'PAIR10', label: '10% Double-Pair Savings', discountPercent: 10 };
-  } else if (totalCount === 1) {
-    suggestedCoupon = { code: 'WELCOME10', label: '10% Welcome Discount', discountPercent: 10 };
   }
-
-  let couponDiscount = 0;
-  if (appliedCoupon) {
-    if (appliedCoupon.discountPercent) {
-      couponDiscount = Math.round(((subtotal - multiPairDiscount) * appliedCoupon.discountPercent) / 100);
-    } else if (appliedCoupon.discountFlat) {
-      couponDiscount = Math.min(subtotal - multiPairDiscount, appliedCoupon.discountFlat);
-    }
-  }
-
-  const FREE_SHIPPING_THRESHOLD = 999;
-  const isFreeShipping = subtotal >= FREE_SHIPPING_THRESHOLD || subtotal === 0;
-  const shippingFee = isFreeShipping ? 0 : 99;
-  const freeShippingAway = Math.max(0, FREE_SHIPPING_THRESHOLD - subtotal);
-  const finalTotal = Math.max(0, subtotal - multiPairDiscount - couponDiscount + shippingFee);
 
   return (
     <CartContext.Provider
       value={{
         items: activeItems,
-        totalCount,
-        subtotal,
-        totalMrp,
-        mrpSavings,
-        multiPairDiscountPercent,
-        multiPairDiscount,
-        nextTierMessage,
+        totalCount: discountCalc.totalCount,
+        subtotal: discountCalc.subtotal,
+        totalMrp: discountCalc.totalMrp,
+        mrpSavings: discountCalc.mrpSavings,
+        multiPairDiscountPercent: discountCalc.multiPairDiscountPercent,
+        multiPairDiscount: discountCalc.multiPairDiscount,
+        discountPercent: discountCalc.discountPercent,
+        discountAmount: discountCalc.discountAmount,
+        nextTierMessage: discountCalc.nextTierMessage,
+        hintMessage: discountCalc.hintMessage,
+        isEligibleForDiscount: discountCalc.isEligibleForDiscount,
         suggestedCoupon,
-        couponDiscount,
-        shippingFee,
-        isFreeShipping,
-        freeShippingAway,
-        finalTotal,
-        appliedCoupon,
+        couponDiscount: discountCalc.couponDiscount,
+        shippingFee: discountCalc.shippingFee,
+        isFreeShipping: discountCalc.isFreeShipping,
+        freeShippingAway: discountCalc.freeShippingAway,
+        finalTotal: discountCalc.finalTotal,
+        total: discountCalc.total,
+        appliedCoupon: discountCalc.validCoupon,
         couponError,
         isCartOpen,
         setIsCartOpen,
@@ -242,3 +228,4 @@ export const CartProvider = ({ children }) => {
 };
 
 export const useCart = () => useContext(CartContext);
+

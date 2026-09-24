@@ -65,6 +65,20 @@ export const QuickViewModal = ({ product, isOpen, onClose, onOpenSizeGuide, onOp
     }
   }, [isOpen]);
 
+  // Support phone & browser hardware Back button so pressing Back closes quick-view without leaving the site
+  useEffect(() => {
+    if (isOpen) {
+      window.history.pushState({ kfModal: 'quickview' }, '');
+      const handlePopState = () => {
+        onClose();
+      };
+      window.addEventListener('popstate', handlePopState);
+      return () => {
+        window.removeEventListener('popstate', handlePopState);
+      };
+    }
+  }, [isOpen, onClose]);
+
   if (!isOpen || !product) return null;
 
   const activeImg = currentImage || product.image;

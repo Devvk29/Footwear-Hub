@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { doc, getDoc, collection, query, where, getDocs } from 'firebase/firestore';
 import { db } from '../firebase';
 import { useDatabase } from './DatabaseContext';
@@ -9,6 +10,7 @@ const OWNER_PHONE = "9427644222";
 const OWNER_EMAILS = ["manakkothari132@gmail.com", "973dev@gmail.com"];
 
 export const AuthProvider = ({ children }) => {
+  const navigate = useNavigate();
   const { registerCustomer, recordUserSignInActivity, customers, allOrders } = useDatabase();
 
   // Always start with no user — every page load requires fresh sign-in
@@ -152,9 +154,13 @@ export const AuthProvider = ({ children }) => {
       recordUserSignInActivity(loggedInUser);
     }
 
-    // Execute pending callback
+    // Execute pending callback or redirect
     if (authModalState.pendingAction && typeof authModalState.pendingAction === 'function') {
       authModalState.pendingAction(loggedInUser);
+    } else if (authModalState.reason === 'orders') {
+      navigate('/orders');
+    } else {
+      navigate('/', { replace: true });
     }
 
     closeAuthModal();
@@ -209,6 +215,10 @@ export const AuthProvider = ({ children }) => {
         }
         if (authModalState.pendingAction && typeof authModalState.pendingAction === 'function') {
           authModalState.pendingAction(ownerUser);
+        } else if (authModalState.reason === 'orders') {
+          navigate('/orders');
+        } else {
+          navigate('/', { replace: true });
         }
         closeAuthModal();
         return { success: true, user: ownerUser, isOwner: true };
@@ -315,6 +325,10 @@ export const AuthProvider = ({ children }) => {
 
     if (authModalState.pendingAction && typeof authModalState.pendingAction === 'function') {
       authModalState.pendingAction(customerUser);
+    } else if (authModalState.reason === 'orders') {
+      navigate('/orders');
+    } else {
+      navigate('/', { replace: true });
     }
     closeAuthModal();
     return { success: true, user: customerUser, isOwner: false };
@@ -501,21 +515,31 @@ export const AuthProvider = ({ children }) => {
     }
     if (authModalState.pendingAction && typeof authModalState.pendingAction === 'function') {
       authModalState.pendingAction(ownerUser);
+    } else if (authModalState.reason === 'orders') {
+      navigate('/orders');
+    } else {
+      navigate('/', { replace: true });
     }
     closeAuthModal();
   };
 
   const logout = () => {
     setUser(null);
-    localStorage.removeItem('kf_active_user');
-    localStorage.removeItem('kf_cart');
+    closeAuthModal();
     try {
+      localStorage.removeItem('kf_active_user');
+      localStorage.removeItem('kf_cart');
+      localStorage.removeItem('kf_wishlist');
+      localStorage.removeItem('kf_user_size_profile');
+      localStorage.removeItem('kf_customer_pincode');
+      sessionStorage.clear();
       Object.keys(localStorage).forEach(key => {
-        if (key.startsWith('kf_cart_')) {
+        if (key.startsWith('kf_cart_') || key.startsWith('kf_wishlist_')) {
           localStorage.removeItem(key);
         }
       });
     } catch (e) {}
+    navigate('/', { replace: true });
   };
 
   // Filter user's personal orders from all orders in database (Strict customer privacy)

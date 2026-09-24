@@ -45,6 +45,7 @@ export const ProductDetailPage = ({ onOpenSizeGuide, onOpenCheckout }) => {
       const defaultSize = product.sizes && product.sizes.length > 0 ? product.sizes[0] : 8;
       setSelectedColor(defaultColor);
       setSelectedSize(defaultSize);
+      setQuantity(1);
 
       const colorImg = (product.colorImages && product.colorImages[defaultColor]) ||
         (product.gallery && product.gallery[0]) ||
@@ -53,6 +54,14 @@ export const ProductDetailPage = ({ onOpenSizeGuide, onOpenCheckout }) => {
     }
   }, [productId, product?.id]);
 
+  const handleBack = () => {
+    if (window.history.length > 1) {
+      navigate(-1);
+    } else {
+      navigate('/');
+    }
+  };
+
   if (!product) {
     return (
       <div style={{ minHeight: '70vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '2rem', textAlign: 'center' }}>
@@ -60,7 +69,7 @@ export const ProductDetailPage = ({ onOpenSizeGuide, onOpenCheckout }) => {
         <p style={{ color: '#78716C', margin: '0.5rem 0 1.5rem' }}>
           The product you are looking for may have been moved or updated.
         </p>
-        <Link to="/" className="btn btn-sage">
+        <Link to="/" className="btn btn-sage" style={{ minHeight: '44px', display: 'inline-flex', alignItems: 'center' }}>
           <ArrowLeft size={16} />
           <span>Browse All Footwear</span>
         </Link>
@@ -107,15 +116,59 @@ export const ProductDetailPage = ({ onOpenSizeGuide, onOpenCheckout }) => {
   return (
     <div className="container-custom" style={{ padding: '1.5rem 1rem 4rem' }}>
       
-      {/* Breadcrumb Navigation */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.8rem', color: '#78716C', marginBottom: '1.25rem', flexWrap: 'wrap' }}>
-        <Link to="/" style={{ color: 'inherit', textDecoration: 'none' }}>Home</Link>
-        <span>/</span>
-        <Link to={genderUrl} style={{ color: 'inherit', textDecoration: 'none' }}>
-          {product.gender}'s Wear
-        </Link>
-        <span>/</span>
-        <span style={{ color: '#1C1917', fontWeight: 700 }}>{product.name}</span>
+      {/* Navigation Buttons: Back and Back to Dashboard */}
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.75rem', marginBottom: '1.25rem', flexWrap: 'wrap' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', flexWrap: 'wrap' }}>
+          <button
+            type="button"
+            onClick={handleBack}
+            className="btn btn-secondary"
+            style={{
+              minHeight: '44px',
+              minWidth: '44px',
+              padding: '0.5rem 1rem',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '0.4rem',
+              fontSize: '0.85rem',
+              fontWeight: 700,
+              cursor: 'pointer',
+              borderRadius: 'var(--radius-md)'
+            }}
+            title="Go to previous page"
+          >
+            <ArrowLeft size={16} />
+            <span>← Back</span>
+          </button>
+          <Link
+            to="/"
+            className="btn btn-ghost"
+            style={{
+              minHeight: '44px',
+              padding: '0.5rem 0.9rem',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '0.35rem',
+              fontSize: '0.85rem',
+              fontWeight: 700,
+              textDecoration: 'none',
+              borderRadius: 'var(--radius-md)'
+            }}
+          >
+            <span>Back to Dashboard</span>
+          </Link>
+        </div>
+
+        {/* Breadcrumb Navigation */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.8rem', color: '#78716C', flexWrap: 'wrap' }}>
+          <Link to="/" style={{ color: 'inherit', textDecoration: 'none' }}>Home</Link>
+          <span>/</span>
+          <Link to={genderUrl} style={{ color: 'inherit', textDecoration: 'none' }}>
+            {product.gender}'s Wear
+          </Link>
+          <span>/</span>
+          <span style={{ color: '#1C1917', fontWeight: 700 }}>{product.name}</span>
+        </div>
       </div>
 
       {/* Main Product Layout */}

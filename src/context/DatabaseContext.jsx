@@ -20,6 +20,7 @@ import {
 } from 'firebase/auth';
 import { db, auth } from '../firebase';
 import { INITIAL_PRODUCTS, createDefaultStockForSizes } from '../data/products';
+import { calculateCartDiscount } from '../utils/discountUtils';
 
 const DatabaseContext = createContext();
 
@@ -914,11 +915,28 @@ export const DatabaseProvider = ({ children }) => {
   const createOrder = (orderData) => {
     const id = `KF-${Math.floor(100000 + Math.random() * 900000)}`;
     const custPhone = orderData.customer?.phone ? String(orderData.customer.phone).replace(/\D/g, '') : '';
+    
+    // Recalculate discount and pricing strictly at order creation (Single Source of Truth)
+    const orderItems = orderData.items || [];
+    const couponToApply = orderData.appliedCoupon || (orderData.pricing?.couponDiscount > 0 ? orderData.pricing?.appliedCoupon : null);
+    const calculatedPricing = calculateCartDiscount(orderItems, couponToApply);
+
+    const safePricing = {
+      subtotal: calculatedPricing.subtotal,
+      multiPairDiscountPercent: calculatedPricing.multiPairDiscountPercent,
+      multiPairDiscount: calculatedPricing.multiPairDiscount,
+      couponDiscount: calculatedPricing.couponDiscount,
+      shippingFee: calculatedPricing.shippingFee,
+      finalTotal: calculatedPricing.finalTotal
+    };
+
     const newOrder = {
       ...orderData,
       id,
       customerPhone: custPhone,
       customerEmail: orderData.customer?.email || '',
+      pricing: safePricing,
+      total: safePricing.finalTotal,
       date: new Date().toLocaleDateString('en-IN', {
         day: 'numeric',
         month: 'short',

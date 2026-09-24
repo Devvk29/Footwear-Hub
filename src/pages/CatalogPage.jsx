@@ -31,6 +31,11 @@ export const CatalogPage = ({
     setActiveGender(categoryGender);
     setSelectedCategory('all');
     setSelectedSizes([]);
+    setPriceRange(3000);
+    setSelectedOccasions([]);
+    setMinRating(0);
+    setInStockOnly(false);
+    setSortBy('popular');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [categoryGender]);
 

@@ -36,6 +36,7 @@ export const CheckoutModal = ({ isOpen, onClose, onOrderPlaced }) => {
     couponDiscount,
     shippingFee,
     finalTotal,
+    appliedCoupon,
     clearCart
   } = useCart();
   const { createOrder } = useDatabase();
@@ -166,8 +167,10 @@ export const CheckoutModal = ({ isOpen, onClose, onOrderPlaced }) => {
           multiPairDiscount,
           couponDiscount,
           shippingFee,
-          finalTotal
-        }
+          finalTotal,
+          appliedCoupon
+        },
+        appliedCoupon
       });
 
       try {

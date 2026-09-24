@@ -25,6 +25,8 @@ import { STORE_INFO } from '../../data/storeInfo';
 export const OrderSuccessModal = ({ order, isOpen, onClose }) => {
   const [isDownloading, setIsDownloading] = useState(false);
   const [isSharing, setIsSharing] = useState(false);
+  const [cachedPdfObj, setCachedPdfObj] = useState(null);
+  const [cachedPdfFile, setCachedPdfFile] = useState(null);
 
   // Celebration confetti only on fresh orders (not when inspecting invoices from admin)
   useEffect(() => {
@@ -129,19 +131,17 @@ export const OrderSuccessModal = ({ order, isOpen, onClose }) => {
     }
   }, [isOpen]);
 
-  if (!isOpen || !order) return null;
-
-  const shipping = order.shippingAddress || {
-    fullName: order.customer?.name || 'Valued Customer',
-    phone: order.customer?.phone || '',
-    email: order.customer?.email || '',
+  const shipping = order?.shippingAddress || {
+    fullName: order?.customer?.name || 'Valued Customer',
+    phone: order?.customer?.phone || '',
+    email: order?.customer?.email || '',
     street: 'Direct Store Order',
     city: 'Gujarat',
     state: 'India',
     pincode: ''
   };
 
-  const pricing = order.pricing || {
+  const pricing = order?.pricing || {
     subtotal: 0,
     multiPairDiscount: 0,
     multiPairDiscountPercent: 0,
@@ -259,9 +259,6 @@ export const OrderSuccessModal = ({ order, isOpen, onClose }) => {
     }
   };
 
-  const [cachedPdfObj, setCachedPdfObj] = useState(null);
-  const [cachedPdfFile, setCachedPdfFile] = useState(null);
-
   // Background prepare official PDF document as soon as modal opens so user activation gesture is instant
   useEffect(() => {
     let active = true;
@@ -290,6 +287,8 @@ export const OrderSuccessModal = ({ order, isOpen, onClose }) => {
       };
     }
   }, [isOpen, order?.id]);
+
+  if (!isOpen || !order) return null;
 
   const getPreparedPdf = async () => {
     if (cachedPdfFile && cachedPdfObj) {

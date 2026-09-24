@@ -395,20 +395,28 @@ export const InvoicePage = () => {
       
       {/* Top Breadcrumb & Action Bar */}
       <div className="no-print" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem', flexWrap: 'wrap', gap: '0.75rem' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', flexWrap: 'wrap' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', flexWrap: 'wrap' }}>
           <button
             type="button"
             onClick={handleBack}
             className="btn btn-secondary"
-            style={{ padding: '0.45rem 0.85rem', fontSize: '0.8rem', display: 'flex', alignItems: 'center', gap: '0.35rem', cursor: 'pointer' }}
+            style={{ minHeight: '44px', minWidth: '44px', padding: '0.5rem 1rem', fontSize: '0.85rem', fontWeight: 700, display: 'inline-flex', alignItems: 'center', gap: '0.4rem', cursor: 'pointer', borderRadius: 'var(--radius-md)' }}
+            title="Go to previous page"
           >
-            <ArrowLeft size={14} />
-            <span>Back</span>
+            <ArrowLeft size={16} />
+            <span>← Back</span>
           </button>
+          <Link
+            to="/"
+            className="btn btn-ghost"
+            style={{ minHeight: '44px', padding: '0.5rem 0.9rem', fontSize: '0.85rem', fontWeight: 700, textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '0.35rem', borderRadius: 'var(--radius-md)' }}
+          >
+            <span>Back to Dashboard</span>
+          </Link>
           <Link
             to="/orders"
             className="btn btn-secondary"
-            style={{ padding: '0.45rem 0.75rem', fontSize: '0.78rem', textDecoration: 'none', display: 'inline-flex', alignItems: 'center' }}
+            style={{ minHeight: '44px', padding: '0.5rem 0.85rem', fontSize: '0.82rem', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', borderRadius: 'var(--radius-md)' }}
           >
             My Orders
           </Link>
@@ -417,9 +425,9 @@ export const InvoicePage = () => {
               type="button"
               onClick={() => navigate('/admin')}
               className="btn btn-secondary"
-              style={{ padding: '0.45rem 0.75rem', fontSize: '0.78rem', display: 'inline-flex', alignItems: 'center', gap: '0.35rem', cursor: 'pointer', background: '#F3F4F6' }}
+              style={{ minHeight: '44px', padding: '0.5rem 0.85rem', fontSize: '0.82rem', display: 'inline-flex', alignItems: 'center', gap: '0.35rem', cursor: 'pointer', background: '#F3F4F6', borderRadius: 'var(--radius-md)' }}
             >
-              <ArrowLeft size={13} />
+              <ArrowLeft size={14} />
               <span>Return to Admin Panel</span>
             </button>
           )}

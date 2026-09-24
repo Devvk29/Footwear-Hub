@@ -1,16 +1,18 @@
 import React from 'react';
+import { NavLink, useLocation } from 'react-router-dom';
 import { CATEGORIES_LIST } from '../../data/products';
 
 export const CategoryPills = ({
-  activeGender,
-  onSelectGender,
   selectedCategory,
   onSelectCategory
 }) => {
+  const location = useLocation();
+  const path = location.pathname;
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem', margin: '1.25rem 0 1rem' }}>
       
-      {/* Primary Gender Pills with smooth horizontal slide */}
+      {/* Primary Gender Pills with smooth horizontal slide - Synchronized via Real URL Routes */}
       <div
         className="mobile-slide-strip"
         style={{
@@ -25,65 +27,69 @@ export const CategoryPills = ({
           border: '1px solid var(--border-subtle)'
         }}
       >
-        <button
-          type="button"
-          onClick={() => onSelectGender('All')}
-          style={{
+        <NavLink
+          to="/"
+          end
+          style={({ isActive }) => ({
             padding: '0.5rem 1rem',
             border: 'none',
             borderRadius: 'var(--radius-md)',
-            background: activeGender === 'All' ? 'var(--accent-charcoal)' : 'transparent',
-            color: activeGender === 'All' ? '#FFFFFF' : 'var(--text-secondary)',
+            background: isActive ? 'var(--accent-charcoal)' : 'transparent',
+            color: isActive ? '#FFFFFF' : 'var(--text-secondary)',
             fontWeight: 700,
             fontSize: '0.8125rem',
             cursor: 'pointer',
             whiteSpace: 'nowrap',
+            textDecoration: 'none',
             transition: 'all 0.2s ease',
-            flexShrink: 0
-          }}
+            flexShrink: 0,
+            display: 'inline-block'
+          })}
         >
           All Footwear
-        </button>
+        </NavLink>
 
-        <button
-          type="button"
-          onClick={() => onSelectGender('Men')}
-          style={{
+        <NavLink
+          to="/mens-wear"
+          style={({ isActive }) => ({
             padding: '0.5rem 1rem',
             border: 'none',
             borderRadius: 'var(--radius-md)',
-            background: activeGender === 'Men' ? 'var(--accent-charcoal)' : 'transparent',
-            color: activeGender === 'Men' ? '#FFFFFF' : 'var(--text-secondary)',
+            background: isActive ? 'var(--accent-charcoal)' : 'transparent',
+            color: isActive ? '#FFFFFF' : 'var(--text-secondary)',
             fontWeight: 700,
             fontSize: '0.8125rem',
             cursor: 'pointer',
             whiteSpace: 'nowrap',
+            textDecoration: 'none',
             transition: 'all 0.2s ease',
-            flexShrink: 0
-          }}
+            flexShrink: 0,
+            display: 'inline-block'
+          })}
         >
-          Men's Wear <span style={{ fontSize: '0.7rem', opacity: activeGender === 'Men' ? 0.85 : 0.65 }}>(IND 6–12)</span>
-        </button>
+          Men's Wear <span style={{ fontSize: '0.7rem', opacity: path === '/mens-wear' ? 0.85 : 0.65 }}>(IND 6–12)</span>
+        </NavLink>
 
-        <button
-          type="button"
-          onClick={() => onSelectGender('Women')}
-          style={{
+        <NavLink
+          to="/womens-wear"
+          style={({ isActive }) => ({
             padding: '0.5rem 1rem',
             border: 'none',
             borderRadius: 'var(--radius-md)',
-            background: activeGender === 'Women' ? 'var(--accent-charcoal)' : 'transparent',
-            color: activeGender === 'Women' ? '#FFFFFF' : 'var(--text-secondary)',
+            background: isActive ? 'var(--accent-charcoal)' : 'transparent',
+            color: isActive ? '#FFFFFF' : 'var(--text-secondary)',
             fontWeight: 700,
             fontSize: '0.8125rem',
             cursor: 'pointer',
             whiteSpace: 'nowrap',
+            textDecoration: 'none',
             transition: 'all 0.2s ease',
-            flexShrink: 0
-          }}
+            flexShrink: 0,
+            display: 'inline-block'
+          })}
         >
-          Women's Wear <span style={{ fontSize: '0.7rem', opacity: activeGender === 'Women' ? 0.85 : 0.65 }}>(IND 3–9)</span>
-        </button>
+          Women's Wear <span style={{ fontSize: '0.7rem', opacity: path === '/womens-wear' ? 0.85 : 0.65 }}>(IND 3–9)</span>
+        </NavLink>
       </div>
 
       {/* Subcategory brand/style tags slideable shelf */}

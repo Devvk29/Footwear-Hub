@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { STORE_INFO } from '../data/storeInfo';
 import { CUSTOMER_REVIEWS } from '../data/reviews';
 import {
@@ -21,7 +21,16 @@ import {
 } from 'lucide-react';
 
 export const AboutPage = () => {
+  const navigate = useNavigate();
   const [openFaqIndex, setOpenFaqIndex] = useState(0);
+
+  const handleBack = () => {
+    if (window.history.length > 1) {
+      navigate(-1);
+    } else {
+      navigate('/');
+    }
+  };
 
   const handleWhatsApp = () => {
     const text = encodeURIComponent(
@@ -34,22 +43,60 @@ export const AboutPage = () => {
     <div style={{ minHeight: '85vh', background: '#FAF9F6', paddingBottom: '4rem' }}>
       {/* Top Breadcrumb Bar */}
       <div style={{ background: '#FFFFFF', borderBottom: '1px solid var(--border-subtle)', padding: '0.75rem 1rem' }}>
-        <div className="container-custom" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.5rem', flexWrap: 'wrap' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.8125rem', color: 'var(--text-muted)' }}>
-            <Link to="/" style={{ color: 'var(--text-secondary)', textDecoration: 'none', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
-              <ArrowLeft size={14} />
-              <span>Catalog</span>
+        <div className="container-custom" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.75rem', flexWrap: 'wrap' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', flexWrap: 'wrap' }}>
+            <button
+              type="button"
+              onClick={handleBack}
+              className="btn btn-secondary"
+              style={{
+                minHeight: '44px',
+                minWidth: '44px',
+                padding: '0.5rem 1rem',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '0.4rem',
+                fontSize: '0.85rem',
+                fontWeight: 700,
+                cursor: 'pointer',
+                borderRadius: 'var(--radius-md)'
+              }}
+              title="Go to previous page"
+            >
+              <ArrowLeft size={16} />
+              <span>← Back</span>
+            </button>
+
+            <Link
+              to="/"
+              className="btn btn-ghost"
+              style={{
+                minHeight: '44px',
+                padding: '0.5rem 0.9rem',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '0.35rem',
+                fontSize: '0.85rem',
+                fontWeight: 700,
+                textDecoration: 'none',
+                borderRadius: 'var(--radius-md)'
+              }}
+            >
+              <span>Back to Dashboard</span>
             </Link>
-            <ChevronRight size={13} />
-            <span style={{ color: 'var(--text-primary)', fontWeight: 700 }}>About & Heritage</span>
+
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.8125rem', color: 'var(--text-muted)', marginLeft: '0.25rem' }}>
+              <ChevronRight size={13} />
+              <span style={{ color: 'var(--text-primary)', fontWeight: 700 }}>About & Heritage</span>
+            </div>
           </div>
 
           <Link
             to="/"
             className="btn btn-primary"
-            style={{ padding: '0.35rem 0.85rem', fontSize: '0.75rem', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '0.3rem' }}
+            style={{ minHeight: '44px', padding: '0.45rem 1rem', fontSize: '0.8rem', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '0.35rem' }}
           >
-            <ShoppingBag size={13} />
+            <ShoppingBag size={14} />
             <span>Browse Shoes</span>
           </Link>
         </div>
